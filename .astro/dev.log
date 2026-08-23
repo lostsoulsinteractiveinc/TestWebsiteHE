@@ -1,35 +1,26 @@
 {"message":"connected.","label":"vite","level":"info"}
-{"message":"Generated 0ms","label":"types","level":"info"}
+{"message":"Generated 1ms","label":"types","level":"info"}
 {"message":"connected.","label":"vite","level":"info"}
 {"message":"Syncing content","label":"content","level":"info"}
 {"message":"Astro config changed","label":"content","level":"info"}
 {"message":"Clearing content store","label":"content","level":"info"}
 {"message":"Synced content","label":"content","level":"info"}
 {"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
-{"message":" astro  v7.2.2 ready in 703 ms\n┃ Local    http://localhost:4321/\n┃ Network  use --host to expose","label":"SKIP_FORMAT","level":"info"}
+{"message":" astro  v7.2.2 ready in 896 ms\n┃ Local    http://localhost:4321/\n┃ Network  use --host to expose","label":"SKIP_FORMAT","level":"info"}
 {"message":"watching for file changes...","label":null,"level":"info"}
-{"message":"[200] / 35ms","label":null,"level":"info"}
+{"message":"[200] / 34ms","label":null,"level":"info"}
 {"message":"program reload","label":"vite","level":"info"}
 {"message":"An error happened during full reload\nFailed to load url astro:server-app.js (resolved id: astro:server-app.js). Does the file exist?\nError: Failed to load url astro:server-app.js (resolved id: astro:server-app.js). Does the file exist?\n    at loadAndTransform (file:///Users/amashadas/Documents/GitHub/TestWebsiteHE/node_modules/vite/dist/node/chunks/node.js:20608:31)","label":"vite","level":"error"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"[200] / 12ms","label":null,"level":"info"}
+{"message":"[200] / 7ms","label":null,"level":"info"}
 {"message":"[200] / 2ms","label":null,"level":"info"}
 {"message":"dependencies optimized: astro/virtual-modules/transitions-events.js, astro/virtual-modules/transitions-router.js, astro/virtual-modules/transitions-swap-functions.js, astro/virtual-modules/transitions-types.js","label":"vite","level":"info"}
+{"message":"program reload","label":"vite","level":"info"}
+{"message":"[200] / 4ms","label":null,"level":"info"}
 {"message":"[200] / 2ms","label":null,"level":"info"}
+{"message":"program reload","label":"vite","level":"info"}
+{"message":"/src/styles/global.css","label":"watch","level":"info"}
+{"message":"/src/styles/global.css","label":"watch","level":"info"}
+{"message":"/src/styles/global.css","label":"watch","level":"info"}
+{"message":"/src/styles/global.css","label":"watch","level":"info"}
 {"message":"/src/styles/global.css","label":"watch","level":"info"}
 {"message":"program reload","label":"vite","level":"info"}
-{"message":"[200] / 12ms","label":null,"level":"info"}
-{"message":"[200] / 1ms","label":null,"level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"[200] / 7ms","label":null,"level":"info"}
-{"message":"[200] / 1ms","label":null,"level":"info"}
-{"message":"program reload","label":"vite","level":"info"}
-{"message":"[200] /about 13ms","label":null,"level":"info"}
-{"message":"[200] /about 2ms","label":null,"level":"info"}
-{"message":"[200] /posts 12ms","label":null,"level":"info"}

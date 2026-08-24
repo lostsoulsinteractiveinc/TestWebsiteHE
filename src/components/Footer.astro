@@ -1,0 +1,142 @@
+---
+import logoMark from "@/assets/img/logo-wordmark.png";
+import SocialIcons from "./SocialIcons.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const homeHref = `${base}/`;
+const footerBg = `${base}/img/footer.png`;
+const upArrow = `${base}/img/upArrow.svg`;
+---
+
+<footer class="site-footer" style={`--footer-bg: url(${footerBg})`}>
+  <div class="site-footer__scrim"></div>
+
+  <div class="site-footer__inner container">
+    <div class="site-footer__top">
+      <a href={homeHref} class="site-footer__logo" aria-label="Hotel Espir home">
+        <img
+          src={logoMark.src}
+          width={logoMark.width}
+          height={logoMark.height}
+          alt=""
+        />
+      </a>
+
+      <button
+        id="scroll-top"
+        class="site-footer__top-btn"
+        aria-label="Scroll to top"
+        type="button"
+      >
+        <img src={upArrow} alt="" width="24" height="24" />
+      </button>
+    </div>
+
+    <div class="site-footer__follow">
+      <span class="site-footer__follow-label">Follow us</span>
+      <SocialIcons size="1.5rem" />
+    </div>
+
+    <p class="site-footer__copyright">
+      © Hotel Espir. A Lost Souls Interactive game
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    background-image: var(--footer-bg);
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+  }
+
+  .site-footer__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(33, 19, 17, 0.75) 0%,
+      rgba(33, 19, 17, 0.9) 100%
+    );
+  }
+
+  .site-footer__inner {
+    position: relative;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .site-footer__top {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .site-footer__logo img {
+    height: 7rem;
+    width: auto;
+    display: block;
+  }
+
+  .site-footer__top-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .site-footer__top-btn:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .site-footer__follow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .site-footer__follow-label {
+    color: var(--color-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .site-footer__copyright {
+    margin: 0;
+    color: var(--color-muted-foreground);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+</style>
+
+<script>
+  function initScrollTop() {
+    const btn = document.querySelector<HTMLButtonElement>("#scroll-top");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  initScrollTop();
+  document.addEventListener("astro:after-swap", initScrollTop);
+</script>

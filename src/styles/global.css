@@ -1,0 +1,59 @@
+/*
+  Hotel Espir color guide.
+  Raw palette below is fixed (from the brand HSB reference); everything
+  else in the site should use the semantic tokens, never the raw values,
+  so a future palette tweak only happens in one place.
+*/
+:root {
+  /* Raw brand palette */
+  --palette-cream: #fcf092; /* HSB 53, 42, 99 */
+  --palette-tan: #8a6b3e; /* HSB 36, 55, 54 */
+  --palette-olive: #5c4d30; /* HSB 40, 48, 36 */
+  --palette-red: #782511; /* HSB 12, 86, 47 */
+  --palette-maroon: #4f1b0d; /* HSB 12, 83, 31 */
+  --palette-near-black: #211311;
+
+  /* Semantic tokens — use these in components/pages */
+  --color-background: var(--palette-near-black);
+  --color-foreground: #f5f0e6; /* off-white body text, warm-tinted to sit with the palette */
+  --color-accent: var(--palette-cream); /* links, highlights, active states */
+  --color-accent-foreground: var(--palette-red); /* text/icons placed on top of --color-accent */
+  --color-muted: var(--palette-tan); /* panels, cards, secondary surfaces */
+  --color-muted-foreground: var(--palette-olive); /* secondary text: dates, captions, meta */
+  --color-border: var(--palette-maroon); /* hairline dividers */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+}
+
+a {
+  color: var(--color-accent);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+@font-face {
+  font-family: "Donau Neue";
+  src: url("../assets/fonts/DonauNeue-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

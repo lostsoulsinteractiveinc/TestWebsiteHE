@@ -1,0 +1,183 @@
+---
+import logoMark from "@/assets/img/logo-mark.png";
+
+const navLinks = [
+  { label: "News", href: "/news" },
+  { label: "Press Kit", href: "/press" },
+  { label: "About", href: "/about" },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+---
+
+<header class="site-nav">
+  <div class="site-nav__bar">
+    <a href="/" class="site-nav__logo" aria-label="Hotel Espir home">
+      <img
+        src={logoMark.src}
+        width={logoMark.width}
+        height={logoMark.height}
+        alt=""
+      />
+    </a>
+
+    <button
+      id="nav-toggle"
+      class="site-nav__toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="nav-links"
+    >
+      <span class="site-nav__toggle-bar"></span>
+      <span class="site-nav__toggle-bar"></span>
+      <span class="site-nav__toggle-bar"></span>
+    </button>
+
+    <ul id="nav-links" class="site-nav__links">
+      {
+        navLinks.map(({ label, href }) => (
+          <li>
+            <a href={href} aria-current={currentPath === href ? "page" : undefined}>
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: transparent;
+  }
+
+  .site-nav__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .site-nav__logo {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .site-nav__logo img {
+    height: 2.25rem;
+    width: auto;
+    display: block;
+  }
+
+  .site-nav__toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.25rem;
+    height: 2.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .site-nav__toggle-bar {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--color-foreground);
+    transition:
+      transform 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .site-nav__toggle.is-active .site-nav__toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .site-nav__toggle.is-active .site-nav__toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .site-nav__toggle.is-active .site-nav__toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .site-nav__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .site-nav__links a {
+    color: var(--color-foreground);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding-bottom: 0.2rem;
+    border-bottom: 2px solid transparent;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .site-nav__links a:hover,
+  .site-nav__links a[aria-current="page"] {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  @media (max-width: 640px) {
+    .site-nav__toggle {
+      display: flex;
+    }
+
+    .site-nav__links {
+      position: absolute;
+      inset-inline: 0;
+      top: 100%;
+      display: none;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 1rem clamp(1.25rem, 4vw, 3rem) 1.75rem;
+      /* Solid, not transparent: an open dropdown sits on top of scrolling
+         page content, so it needs its own backing or the two overlap and
+         both become unreadable. Matches the page background exactly so it
+         still reads as "no navbar chrome", just an opaque page underneath. */
+      background: var(--color-background);
+    }
+
+    .site-nav__links.is-open {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  function initNavToggle() {
+    const toggle = document.querySelector<HTMLButtonElement>("#nav-toggle");
+    const links = document.querySelector<HTMLUListElement>("#nav-links");
+    if (!toggle || !links) return;
+
+    toggle.addEventListener("click", () => {
+      const isOpen = links.classList.toggle("is-open");
+      toggle.classList.toggle("is-active", isOpen);
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+
+  initNavToggle();
+  document.addEventListener("astro:after-swap", initNavToggle);
+</script>

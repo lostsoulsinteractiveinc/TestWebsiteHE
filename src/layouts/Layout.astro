@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import Nav from "@/components/Nav.astro";
 
 type Props = {
   title?: string;
@@ -10,19 +11,22 @@ const {
   title = "Hotel Espir",
   description = "A stealth horror game from Lost Souls Interactive.",
 } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+    <link rel="icon" href={`${base}/favicon.ico`} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
   <body>
+    <Nav />
     <slot />
   </body>
 </html>

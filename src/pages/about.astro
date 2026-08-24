@@ -2,6 +2,88 @@
 import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout title="About | Hotel Espir">
-  <h1>About</h1>
+<Layout title="About | Hotel Espir" description="About Lost Souls Interactive, the studio behind Hotel Espir.">
+  <main class="container">
+    <section class="section">
+      <h1>About</h1>
+      <p class="tagline">Lost Souls Interactive (LSI)</p>
+    </section>
+
+    <section class="section">
+      <h2>Who we are</h2>
+      <p>
+        LSI is composed of 9 developers from all over the world. We've
+        banded together as artists to create an experience like no other.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Mission</h2>
+      <p>
+        Our mission is to contribute to the new wave of digital artists that
+        blend art, history, and technical skills into our favorite medium for
+        telling stories and entertaining.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Values</h2>
+      <p>
+        We value the era of gaming where you could sit down, play a game, not
+        be bothered, and not ever have to ask the question if the money spent
+        was worth it. We never used to wait for sales to get our favorite
+        games, we waited outside stores on opening night.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What makes us unique</h2>
+      <p>
+        As a studio, our distance from one another makes us far different
+        from most. Throughout the development of Hotel Espir alone, many of
+        us have experienced loss. To start with, our first programmer went
+        away to climb in the Italian alps, and we never heard from him again.
+        While we don't know exactly what happened to him, it never felt like
+        he left us, but never came back. Since then, losing people we know
+        and love has plagued our studio, making the distance between us feel
+        all the more lonely.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Contact</h2>
+      <p>
+        <a href="mailto:contact@lostsoulsinteractive.com">contact@lostsoulsinteractive.com</a>
+      </p>
+    </section>
+  </main>
 </Layout>
+
+<style>
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    margin: 0 0 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0 0 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tagline {
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+
+  p {
+    line-height: 1.6;
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 4px;
+  }
+</style>

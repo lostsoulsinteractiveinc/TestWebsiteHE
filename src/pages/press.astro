@@ -1,7 +1,195 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+
+const keyFeatures = [
+  {
+    label: "Story",
+    body: "Our story is unlike any other. With 100 years of history, we're presenting the player with only a sliver of what has happened in this tale of generational torment and pain. Everyone in the game has their own retelling of what happened in this small town, but the only one who truly knows it is the man who hunts you.",
+  },
+  {
+    label: "Mechanic",
+    body: `Hotel Espir's main mechanic is sound. How you use it is up to you. If you don't learn how to think with your ears, you might as well consider yourself dead. Mechanics like throwing items to distract, holding your breath, and using our bespoke item aptly named the "banishment box" take the typical stealth mechanics and turn it up a notch to really solidify the fact that one wrong breath can get you killed.`,
+  },
+  {
+    label: "Style",
+    body: "Paying homage to classics in the investigative horror genre, we lean towards the art deco style similar to the original BioShock. In both our marketing and in-game art, as well as the design aesthetic of Hotel Espir as a whole, the remnants of Frank Lloyd Wright's classic design cues are readily apparent.",
+  },
+];
+
+const quickFacts = [
+  { label: "Title", value: "Hotel Espir" },
+  { label: "Genre", value: "Horror" },
+  { label: "Developer", value: "Lost Souls Interactive (LSI)" },
+  { label: "Platform", value: "Steam, Windows" },
+  { label: "Price", value: "USD $14.99 · CAD $16.99 · EUR €14.99 · AUD $19.99" },
+];
+
+const visuals = [
+  "Game screenshots (4K, Photo Mode)",
+  "Landscape & portrait poster",
+  "Logo — full color, transparent, B/W",
+  "Videos (YouTube, no spoilers)",
+];
 ---
 
-<Layout title="Press Kit | Hotel Espir">
-  <h1>Press Kit</h1>
+<Layout title="Press Kit | Hotel Espir" description="Press kit for Hotel Espir, a stealth horror game from Lost Souls Interactive.">
+  <main class="container">
+    <section class="section">
+      <h1>Hotel Espir</h1>
+      <p class="tagline">
+        Trapped overnight in a grand Alabama hotel built on plantation soil,
+        you must outsmart the echo of a century-old killer. Use sound,
+        stealth, and your instincts to survive the night and uncover the
+        secret beneath Hotel Espir.
+      </p>
+    </section>
+
+    <section class="section">
+      <p>
+        In the 1940s, the final stretch of Charles Lemek's journey should be
+        driving home to his loving wife. As he pulls into the Hotel Espir for
+        the night, something unknown is already coming alive. With guests
+        culminating in the lobby to experience the event, no one is aware yet
+        how their town will be changed forever, again.
+      </p>
+      <p>
+        In Hotel Espir, you're put face to face with a murder from 100 years
+        ago, forced to learn this small town's history to escape, or die
+        trying.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Key Features</h2>
+      <dl class="feature-list">
+        {
+          keyFeatures.map(({ label, body }) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="section">
+      <h2>Quick Facts</h2>
+      <dl class="fact-list">
+        {
+          quickFacts.map(({ label, value }) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="section">
+      <h2>Visuals</h2>
+      <p class="muted">Assets coming soon.</p>
+      <ul class="visual-grid">
+        {visuals.map(label => <li>{label}</li>)}
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>Contact</h2>
+      <p>
+        <a href="mailto:contact@lostsoulsinteractive.com">contact@lostsoulsinteractive.com</a>
+      </p>
+    </section>
+  </main>
 </Layout>
+
+<style>
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    margin: 0 0 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin: 0 0 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tagline {
+    font-style: italic;
+    max-width: 42rem;
+  }
+
+  p {
+    line-height: 1.6;
+  }
+
+  .muted {
+    color: var(--color-muted-foreground);
+    font-style: italic;
+  }
+
+  .feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    margin: 0;
+  }
+
+  .feature-list dt {
+    color: var(--color-accent);
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+
+  .feature-list dd {
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .fact-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem 1.5rem;
+    margin: 0;
+  }
+
+  .fact-list dt {
+    font-weight: 700;
+  }
+
+  .fact-list dd {
+    margin: 0;
+  }
+
+  .visual-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .visual-grid li {
+    border: 1px solid var(--color-border);
+    background: var(--color-muted);
+    color: var(--color-foreground);
+    border-radius: 0.5rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    min-height: 8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  a {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 4px;
+  }
+</style>

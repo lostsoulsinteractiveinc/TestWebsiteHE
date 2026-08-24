@@ -2,8 +2,8 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    // Update if a custom domain is ever attached to GitHub Pages
-    url: "https://lostsoulsinteractiveinc.github.io/TestWebsiteHE/",
+    // TODO: replace with the real domain once one is registered
+    url: "https://hotel-espir.example.com/",
     title: "Hotel Espir",
     description:
       "A stealth horror game about escaping the reanimated killer haunting a grand Alabama hotel built on plantation soil.",

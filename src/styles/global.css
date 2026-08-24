@@ -12,15 +12,22 @@
   --palette-red: #782511; /* HSB 12, 86, 47 */
   --palette-maroon: #4f1b0d; /* HSB 12, 83, 31 */
   --palette-near-black: #211311;
+  /* --test-bkg:  rgba(33, 19, 17, 0.7) 100%; */
 
   /* Semantic tokens — use these in components/pages */
-  --color-background: var(--palette-near-black);
+  --color-background: var(--palette-near-black); /* main body background */
   --color-foreground: #f5f0e6; /* off-white body text, warm-tinted to sit with the palette */
   --color-accent: var(--palette-cream); /* links, highlights, active states */
   --color-accent-foreground: var(--palette-red); /* text/icons placed on top of --color-accent */
   --color-muted: var(--palette-tan); /* panels, cards, secondary surfaces */
   --color-muted-foreground: var(--palette-olive); /* secondary text: dates, captions, meta */
   --color-border: var(--palette-maroon); /* hairline dividers */
+
+  /* Fixed nav height (not fluid padding) so sections that need to sit
+     behind the transparent nav, like the homepage hero, can cancel it
+     out with an exact negative margin. Shared here so Nav.astro and
+     anything overlapping it stay in sync from one source. */
+  --nav-height: 5.5rem;
 }
 
 *,

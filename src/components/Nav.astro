@@ -1,10 +1,17 @@
 ---
 import logoMark from "@/assets/img/logo-mark.png";
 
+// Route paths match each file's location under src/pages/ (e.g.
+// src/pages/press.astro → /press), not the src/pages/ path itself.
+// Prefixed with BASE_URL so links still resolve once deployed under
+// the /TestWebsiteHE/ subpath — a hardcoded "/news" would 404 there.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const homeHref = `${base}/`;
+
 const navLinks = [
-  { label: "News", href: "/news" },
-  { label: "Press Kit", href: "/press" },
-  { label: "About", href: "/about" },
+  { label: "News", href: `${base}/news` },
+  { label: "Press Kit", href: `${base}/press` },
+  { label: "About", href: `${base}/about` },
 ];
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
@@ -12,7 +19,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
 <header class="site-nav">
   <div class="site-nav__bar">
-    <a href="/" class="site-nav__logo" aria-label="Hotel Espir home">
+    <a href={homeHref} class="site-nav__logo" aria-label="Hotel Espir home">
       <img
         src={logoMark.src}
         width={logoMark.width}
@@ -61,7 +68,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1.25rem clamp(1.25rem, 4vw, 3rem);
+    height: var(--nav-height);
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
   }
 
   .site-nav__logo {
@@ -123,7 +131,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    font-size: 0.875rem;
+    font-size: 1.125rem;
     font-weight: 600;
     padding-bottom: 0.2rem;
     border-bottom: 2px solid transparent;

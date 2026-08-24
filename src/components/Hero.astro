@@ -1,0 +1,165 @@
+---
+import wordmark from "@/assets/img/logo-wordmark.png";
+
+// Served straight from public/ rather than bundled — these are large video
+// files, not worth running through the JS asset pipeline. Base-prefixed by
+// hand so the path still resolves under the /TestWebsiteHE/ deploy subpath.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const clipA = `${base}/vid/clipA.mp4`;
+const clipB = `${base}/vid/ClipB.mp4`;
+---
+
+<section class="hero">
+  <video
+    class="hero-video is-visible"
+    data-hero-video="a"
+    src={clipA}
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+  ></video>
+  <video
+    class="hero-video"
+    data-hero-video="b"
+    src={clipB}
+    muted
+    playsinline
+    preload="auto"
+  ></video>
+
+  <div class="hero-scrim"></div>
+
+  <div class="hero-content">
+    <img
+      src={wordmark.src}
+      width={wordmark.width}
+      height={wordmark.height}
+      alt="Hotel Espir"
+      class="hero-wordmark"
+    />
+    <!-- TODO: swap "#" for the real Steam store page URL once available -->
+    <a
+      class="hero-cta"
+      href="#"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Wishlist us on Steam
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: min(85vh, 56rem);
+    min-height: 26rem;
+    overflow: hidden;
+    background: var(--color-background);
+    /* Nav is transparent and sits above this in the stacking order (its
+       z-index creates a stacking context), so pulling the hero up by
+       exactly the nav's height lets the video show through behind it
+       instead of starting only after the nav's own box. */
+    margin-top: calc(-1 * var(--nav-height));
+  }
+
+  .hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  .hero-video.is-visible {
+    opacity: 1;
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(33, 19, 17, 0.25) 0%,
+      rgba(33, 19, 17, 0.35) 55%,
+      rgba(33, 19, 17, 0.6) 75%,
+      rgba(33, 19, 17, 1) 100%
+    );
+  }
+
+  .hero-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .hero-wordmark {
+    width: min(90%, 26rem);
+    height: auto;
+    filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.65));
+  }
+
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.9rem 2rem;
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .hero-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+</style>
+
+<script>
+  function initHeroVideo() {
+    const videoA = document.querySelector<HTMLVideoElement>(
+      '[data-hero-video="a"]'
+    );
+    const videoB = document.querySelector<HTMLVideoElement>(
+      '[data-hero-video="b"]'
+    );
+    if (!videoA || !videoB) return;
+
+    let active = videoA;
+    let next = videoB;
+
+    function swap() {
+      next.currentTime = 0;
+      void next.play();
+      next.classList.add("is-visible");
+      active.classList.remove("is-visible");
+      [active, next] = [next, active];
+    }
+
+    videoA.addEventListener("ended", swap);
+    videoB.addEventListener("ended", swap);
+    void videoA.play();
+  }
+
+  initHeroVideo();
+  document.addEventListener("astro:after-swap", initHeroVideo);
+</script>

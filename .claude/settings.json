@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes pnpm remove hast)",
+      "Bash(npx --yes pnpm add -D @types/hast)",
+      "Bash(npx --yes pnpm run build)",
+      "Bash(node -e \"import\\('node:module'\\).then\\(async \\({createRequire}\\)=>{ const m = await import\\('$\\(pwd\\)/node_modules/.pnpm/cookie@1.1.1/node_modules/cookie/dist/index.js'\\); console.log\\(Object.keys\\(m\\)\\); }\\)\")",
+      "Bash(npm create *)",
+      "Bash(cd /Users/amashadas/Documents/GitHub/TestWebsiteHE *)"
+    ],
+    "additionalDirectories": [
+      "/Users/amashadas/Documents/GitHub/TestWebsiteHE/apparent-asteroid/.vscode"
+    ]
+  }
+}

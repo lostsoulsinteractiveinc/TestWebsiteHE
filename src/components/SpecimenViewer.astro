@@ -71,6 +71,8 @@ const specimens = [
     interaction-prompt="none"
     shadow-intensity="1"
     exposure="1"
+    camera-orbit="0deg 75deg 105%"
+    min-camera-orbit="auto auto 60%"
   />
   <p id="specimen-credit" class="specimen-modal__credit"></p>
   <button
@@ -151,6 +153,12 @@ const specimens = [
     inset: 0;
     z-index: 200;
     display: none;
+    /* Applied here rather than on .specimen-modal__backdrop — that div
+       sits behind the <model-viewer> WebGL canvas, and browsers can fail
+       to blend backdrop-filter through a transparent canvas stacked on
+       top of it. Blurring at this outer level doesn't depend on that. */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .specimen-modal.is-open {
@@ -160,9 +168,7 @@ const specimens = [
   .specimen-modal__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(33, 19, 17, 0.3);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(33, 19, 17, 0.2);
   }
 
   .specimen-modal__viewer {

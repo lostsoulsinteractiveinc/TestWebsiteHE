@@ -1,0 +1,76 @@
+---
+// Page-wide version of TorchReveal.astro: instead of a bounded section, this
+// pins the dark/light image pair to the viewport as a fixed backdrop behind
+// all page content, so the mouse-follow reveal works no matter how tall the
+// page is or how far you've scrolled. Mouse position is tracked relative to
+// the viewport directly (no bounding-rect math needed) since this element
+// always covers exactly the viewport.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const lightSrc = `${base}/img/background.jpg`;
+const darkSrc = `${base}/img/backgrounddark.png`;
+---
+
+<div class="torch-bg" id="torch-bg">
+  <img class="torch-bg__layer torch-bg__layer--dark" src={darkSrc} alt="" />
+  <img class="torch-bg__layer torch-bg__layer--light" src={lightSrc} alt="" />
+</div>
+
+<style>
+  .torch-bg {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    --torch-x: 50%;
+    --torch-y: 50%;
+    --torch-radius: 0px;
+  }
+
+  .torch-bg__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .torch-bg__layer--dark {
+    z-index: 1;
+  }
+
+  .torch-bg__layer--light {
+    z-index: 2;
+    -webkit-mask-image: radial-gradient(
+      circle at var(--torch-x) var(--torch-y),
+      black 0,
+      black var(--torch-radius),
+      transparent calc(var(--torch-radius) + 60px)
+    );
+    mask-image: radial-gradient(
+      circle at var(--torch-x) var(--torch-y),
+      black 0,
+      black var(--torch-radius),
+      transparent calc(var(--torch-radius) + 60px)
+    );
+  }
+</style>
+
+<script>
+  function initTorchBackground() {
+    const torch = document.querySelector<HTMLElement>("#torch-bg");
+    if (!torch) return;
+
+    const BEAM_RADIUS = "70px";
+
+    function move(event: MouseEvent) {
+      torch!.style.setProperty("--torch-x", `${event.clientX}px`);
+      torch!.style.setProperty("--torch-y", `${event.clientY}px`);
+      torch!.style.setProperty("--torch-radius", BEAM_RADIUS);
+    }
+
+    window.addEventListener("mousemove", move);
+  }
+
+  initTorchBackground();
+  document.addEventListener("astro:after-swap", initTorchBackground);
+</script>

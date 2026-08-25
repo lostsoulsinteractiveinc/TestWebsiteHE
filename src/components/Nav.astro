@@ -222,15 +222,28 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
   function initNavScrollBg() {
     const nav = document.querySelector<HTMLElement>(".site-nav");
-    const hero = document.querySelector<HTMLElement>(".hero");
     if (!nav) return;
 
-    // No hero on this page (About/News/Press) — nothing for the nav to
-    // overlap, so just leave it as-is rather than reacting to scroll.
-    if (!hero) return;
+    // Pages with a hero (the homepage) measure against it. Pages with a
+    // full-page TorchBackground instead (News) fall back to the first
+    // content section, so the nav still starts transparent over that
+    // background and turns solid once you scroll into the actual content.
+    // Plain pages with neither (About/Press) have nothing to be
+    // transparent over, so they just stay solid — checking for
+    // TorchBackground specifically (rather than any ".section") keeps
+    // that plain-page behavior intact.
+    const hero = document.querySelector<HTMLElement>(".hero");
+    const hasTorchBackground = document.querySelector<HTMLElement>(".torch-bg");
+    const referenceEl =
+      hero ?? (hasTorchBackground ? document.querySelector<HTMLElement>(".section") : null);
+
+    if (!referenceEl) {
+      nav.classList.add("is-scrolled");
+      return;
+    }
 
     function updateNavBg() {
-      const threshold = hero!.offsetHeight * 0.5;
+      const threshold = referenceEl!.offsetHeight * 0.5;
       nav!.classList.toggle("is-scrolled", window.scrollY > threshold);
     }
 

@@ -1,0 +1,165 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+// TODO: swap "#" for the real playtest signup link once it exists.
+const links = [
+  {
+    title: "Playtest Registration",
+    description: "Sign up for the closed beta and early demo access",
+    href: "#",
+  },
+  {
+    title: "Story & Lore",
+    description: "Read what came before the doors closed",
+    href: `${base}/news`,
+  },
+  {
+    title: "Join Discord",
+    description: "Speak with the others who've stayed",
+    href: "https://hotelespir.com/discord",
+  },
+  {
+    title: "Steam Page",
+    description: "Add to your wishlist and get launch updates",
+    href: "https://store.steampowered.com/app/4216950/Hotel_Espir/",
+  },
+];
+---
+
+<section class="ready">
+  <h2 class="reveal">Are You Ready For Hotel Espir?</h2>
+
+  <p class="reveal">Hotel Espir awaits your arrival.</p>
+  <p class="reveal">
+    Charles may not be ready to confront its history, or his own, to make it
+    through the night. But he must, you must, do everything possible to
+    survive.
+  </p>
+
+  <p class="ready__label reveal">Choose your fate:</p>
+
+  <div class="ready__grid">
+    {
+      links.map(({ title, description, href }) => {
+        const isExternal = href.startsWith("http");
+        return (
+          <a
+            class="ready__card reveal"
+            href={href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+          >
+            <span class="ready__card-title">{title}</span>
+            <span class="ready__card-desc">{description}</span>
+            <span class="ready__card-arrow" aria-hidden="true">
+              →
+            </span>
+          </a>
+        );
+      })
+    }
+  </div>
+
+  <p class="ready__tagline reveal">Some check out. Some never leave | Hotel Espir – Coming Halloween 2027</p>
+</section>
+
+<style>
+  .ready {
+    padding-top: 0;
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    /* Same breakout width as .welcome / the News bento grid, for
+       consistency between pages and sections. */
+    width: 75vw;
+    max-width: 75vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+
+  .ready h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 1.5rem;
+  }
+
+  .ready p {
+    line-height: 1.75;
+    margin: 0 0 1.25rem;
+  }
+
+  .ready__label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-top: 2rem;
+  }
+
+  .ready__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 3rem;
+  }
+
+  .ready__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    padding-right: 3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: var(--color-foreground);
+    /* Self-contained transition list (rather than relying on the global
+       .reveal rule) since this element carries both classes — .reveal's
+       scroll-in animates transform/opacity too, and a component-scoped
+       rule here would otherwise win by specificity and silently drop
+       the opacity transition. */
+    transition:
+      border-color 0.2s ease,
+      transform 0.3s ease,
+      opacity 0.7s ease;
+  }
+
+  .ready__card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .ready__card-title {
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .ready__card-desc {
+    color: var(--color-muted-foreground);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .ready__card-arrow {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.25rem;
+    color: var(--color-foreground);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .ready__card:hover .ready__card-arrow {
+    color: var(--color-accent);
+    transform: translate(2px, -2px);
+  }
+
+  .ready__tagline {
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+    margin: 0 0 0.5rem;
+  }
+</style>

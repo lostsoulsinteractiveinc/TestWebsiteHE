@@ -1,0 +1,254 @@
+---
+// Sticky icon rail (right edge, visible from 50% through the hero to 50%
+// through the footer) that opens a full-screen 3D viewer on click.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+const specimens = [
+  {
+    label: "Book",
+    icon: `${base}/img/iconography/books.png`,
+    model: `${base}/models/BookStand.glb`,
+  },
+  {
+    label: "Ashtray",
+    icon: `${base}/img/iconography/ashtray.png`,
+    model: `${base}/models/Ashtray.glb`,
+  },
+  {
+    label: "Lighter",
+    icon: `${base}/img/iconography/lighter.png`,
+    model: `${base}/models/Lighter.glb`,
+  },
+  {
+    label: "Rattle",
+    icon: `${base}/img/iconography/rattle.png`,
+    model: `${base}/models/BabyRattle.glb`,
+  },
+  {
+    label: "Screwdriver",
+    icon: `${base}/img/iconography/screwdriver.png`,
+    model: `${base}/models/ScrewDriver.glb`,
+  },
+];
+---
+
+<div class="icon-rail" id="icon-rail">
+  {
+    specimens.map(({ label, icon, model }) => (
+      <button
+        class="icon-rail__btn"
+        data-model={model}
+        data-label={label}
+        aria-label={`View ${label} in 3D`}
+        type="button"
+      >
+        <img src={icon} alt="" />
+      </button>
+    ))
+  }
+</div>
+
+<div
+  class="specimen-modal"
+  id="specimen-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="3D prop viewer"
+  aria-hidden="true"
+>
+  <div class="specimen-modal__backdrop" id="specimen-backdrop"></div>
+  <model-viewer
+    id="specimen-model-viewer"
+    class="specimen-modal__viewer"
+    camera-controls
+    disable-pan
+    interaction-prompt="none"
+    shadow-intensity="1"
+    exposure="1"
+  />
+  <button
+    id="specimen-close"
+    class="specimen-modal__close"
+    type="button"
+    aria-label="Close"
+  >
+    ✕
+  </button>
+</div>
+
+<style>
+  .icon-rail {
+    position: fixed;
+    top: 50%;
+    right: clamp(1rem, 3vw, 2rem);
+    transform: translateY(-50%);
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .icon-rail.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .icon-rail__btn {
+    width: 5rem;
+    height: 5rem;
+    padding: 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--color-border);
+    background: rgba(33, 19, 17, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .icon-rail__btn:hover {
+    border-color: var(--color-accent);
+    transform: translateX(-4px);
+  }
+
+  .icon-rail__btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .specimen-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+  }
+
+  .specimen-modal.is-open {
+    display: block;
+  }
+
+  .specimen-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(33, 19, 17, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .specimen-modal__viewer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    --poster-color: transparent;
+  }
+
+  .specimen-modal__close {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+    border: none;
+    border-radius: 999px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .specimen-modal__close:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+</style>
+
+<script>
+  import "@google/model-viewer";
+
+  function initSpecimenViewer() {
+    const modal = document.querySelector<HTMLElement>("#specimen-modal");
+    const viewer = document.querySelector<HTMLElement & { src: string }>(
+      "#specimen-model-viewer"
+    );
+    const closeBtn = document.querySelector<HTMLButtonElement>("#specimen-close");
+    const backdrop = document.querySelector<HTMLElement>("#specimen-backdrop");
+    const buttons = document.querySelectorAll<HTMLButtonElement>(".icon-rail__btn");
+    if (!modal || !viewer || !closeBtn || !backdrop) return;
+
+    function openModal(model: string, label: string) {
+      viewer!.setAttribute("src", model);
+      viewer!.setAttribute("alt", label);
+      modal!.classList.add("is-open");
+      modal!.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      closeBtn!.focus();
+    }
+
+    function closeModal() {
+      modal!.classList.remove("is-open");
+      modal!.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      viewer!.removeAttribute("src");
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const model = btn.dataset.model;
+        const label = btn.dataset.label ?? "";
+        if (model) openModal(model, label);
+      });
+    });
+
+    closeBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && modal!.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+  }
+
+  function initIconRailVisibility() {
+    const rail = document.querySelector<HTMLElement>("#icon-rail");
+    const hero = document.querySelector<HTMLElement>(".hero");
+    const footer = document.querySelector<HTMLElement>(".site-footer");
+    if (!rail || !hero || !footer) return;
+
+    function absoluteTop(el: HTMLElement) {
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function update() {
+      const showAt = absoluteTop(hero!) + hero!.offsetHeight * 0.5;
+      const hideAt = absoluteTop(footer!) + footer!.offsetHeight * 0.5;
+      const visible = window.scrollY > showAt && window.scrollY < hideAt;
+      rail!.classList.toggle("is-visible", visible);
+    }
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+  }
+
+  initSpecimenViewer();
+  initIconRailVisibility();
+  document.addEventListener("astro:after-swap", initSpecimenViewer);
+  document.addEventListener("astro:after-swap", initIconRailVisibility);
+</script>

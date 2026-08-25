@@ -1,0 +1,73 @@
+<section class="welcome">
+  <h1 class="reveal">Welcome to Hotel Espir</h1>
+
+  <p class="reveal">
+    Nestled amid the quiet pines of the Claireham countryside, Hotel Espir
+    has offered weary travelers a place of rest and enjoyment since the turn
+    of the century. Established in 1900s on the grounds of the old Walker Plantation, our hotel is proud to carry forward our local heritage. Visitors often comment on the stillness of the air, the vintage charm of the rooms, and the way the moonlight never quite reaches the far end of the courtyard.
+  </p>
+
+  <p class="reveal">
+    Our staff take great pride in hospitality. Many guests tell us they
+    slept better here than anywhere else — deeply, dreamlessly, some for
+    longer than they intended.
+  </p>
+
+  <p class="reveal">
+    You may notice, as evening settles in, that the hotel seems to breathe
+    along with you.
+    Locals say the land remembers what happened here. We have seen the flicker of lanterns in the fields after midnight. We have heard the footsteps pacing the old servant quarters long since they were buried beneath the parking lot. But do not let the stories frighten you. Here at Hotel Espir, every guest is part of our history.
+  </p>
+
+  <p class="welcome__ominous reveal">Not every guest checks out.</p>
+
+  <p class="welcome__signature reveal">
+    Hotel Espir. Est. 1846. <span aria-hidden="true">|</span> We do hope you
+    enjoy your stay.
+  </p>
+</section>
+
+<style>
+  .welcome {
+    padding-top: 0;
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+    /* Matches the bento grid's width on the News page (see .bento there)
+       so the content column lines up when moving between the two pages.
+       Not combined with the shared .container class here (unlike other
+       pages) — that sets its own margin-inline: auto, which would fight
+       this breakout's margin-left and throw off the centering. */
+    width: 75vw;
+    max-width: 75vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+  }
+
+  .welcome h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 1.5rem;
+  }
+
+  .welcome p {
+    line-height: 1.75;
+    margin: 0 0 1.25rem;
+  }
+
+  .welcome__ominous {
+    font-style: italic;
+    color: var(--color-accent);
+  }
+
+  .welcome__signature {
+    margin-top: 2rem;
+    color: var(--color-muted-foreground);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+
+  .welcome__signature span {
+    margin-inline: 0.5rem;
+    opacity: 0.5;
+  }
+</style>

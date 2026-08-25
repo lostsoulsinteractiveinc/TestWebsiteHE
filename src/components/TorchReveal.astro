@@ -7,15 +7,27 @@ const darkSrc = `${base}/img/backgrounddark.png`;
 <section class="torch" id="torch-reveal">
   <img class="torch__layer torch__layer--dark" src={darkSrc} alt="" />
   <img class="torch__layer torch__layer--light" src={lightSrc} alt="" />
+  <div class="torch__content">
+    <slot />
+  </div>
 </section>
 
 <style>
   .torch {
     position: relative;
     width: 100%;
-    height: min(90vh, 60rem);
-    min-height: 24rem;
+    /* min-height (not height) so the section grows to fit the welcome
+       text instead of clipping it — the image layers are absolutely
+       positioned so they don't affect this, but the slotted content
+       does, and .torch has overflow: hidden for the mask effect. Flex
+       centers that content directly, rather than via a percentage
+       height on .torch__content, which wouldn't reliably resolve
+       against a min-height-only (as opposed to height) parent. */
+    min-height: min(90vh, 60rem);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* Mouse position (px, relative to this element) and the beam's
        current radius — 0 until hovered, so only the dark layer shows
        by default. Both driven by the script below. */
@@ -54,6 +66,14 @@ const darkSrc = `${base}/img/backgrounddark.png`;
       black var(--torch-radius),
       transparent calc(var(--torch-radius) + 60px)
     );
+  }
+
+  .torch__content {
+    /* z-index applies to flex items even without `position` set, so this
+       still paints above the absolutely-positioned image layers. */
+    z-index: 3;
+    padding-block: 3rem;
+    padding-inline: 1.5rem;
   }
 </style>
 

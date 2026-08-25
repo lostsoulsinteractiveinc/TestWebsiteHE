@@ -1,9 +1,1025 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import TorchBackground from "@/components/TorchBackground.astro";
+import GradientTransition from "@/components/GradientTransition.astro";
+
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+// Tiles beyond this count start hidden, revealed by the Load More button.
+const VISIBLE_COUNT = 5;
+
+// Captions are placeholders for tiles without a full post yet — swap for
+// real copy whenever it exists. Only "devlog-01" has post content so far;
+// the rest open as a plain image view until their text is written.
+// Ordered reverse-chronologically (newest first) — screenshot 6 through 1.
+// Tile sizing is handled entirely by CSS (nth-child pattern + dense
+// auto-placement, see .bento below) — no per-item slot class needed, so
+// this list can grow or shrink freely and the grid keeps tiling cleanly.
+const screenshots = [
+  {
+    id: "steam",
+    src: `${base}/img/HEscreenshot4.png`,
+    tag: ["Featured", "Announcement"],
+    title: "Hotel Espir is now on Steam!",
+    post: {
+      kicker: "Announcement",
+      title: "Hotel Espir is now on Steam!",
+      intro:
+        "Very exciting times at Lost Souls Interactive. We have finally released the Steam page for Hotel Espir so you can now get your wishlists in. Every single click helps. It raises our profile in the Steam algorithm and puts the game in front of more people.",
+      sections: [
+        {
+          heading: "",
+          body: [
+            {
+              cta: "Wishlist Now",
+              href: "https://store.steampowered.com/app/4216950/Hotel_Espir/",
+            },
+            "In Hotel Espir, you play as Charles Lemek, who is returning from a business conference, in time to see his daughter born. On the way, he stops at Hotel Espir, a renowned old hotel built on the grounds of a former plantation in Alabama. These grounds hold a sinister secret, manifesting in the rise of a vengeful killer from 100 years ago. You must use your wits and sense of hearing to sneak your way out of Hotel Espir before you are caught by the horror stalking those halls. Escape the cursed Hotel Espir in this 1940s horror experience.",
+            "A huge amount of work has gone into making this happen. Special thanks to Todor for the awesome artwork and to Dylan for his help on writing the content of the page.",
+            { tagline: "Hotel Espir – Coming Halloween 2027" },
+            { tagline: "Some check out. Some never leave…" },
+          ],
+        },
+      ],
+    },
+  },
+//   {
+//     id: "room-concepts",
+//     src: `${base}/img/HEscreenshot9.jpg`,
+//     tag: "Concept",
+//     title: "Room 5 & Room 6.",
+//     post: null,
+//   },
+//   {
+//     id: "fusebox",
+//     src: `${base}/img/HEScreenshot8.png`,
+//     tag: "Art",
+//     title: "Wired for trouble.",
+//     post: null,
+//   },
+  {
+    id: "journal",
+    src: `${base}/img/HEscreenshot6.png`,
+    tag: "Devlog",
+    title: "Developer Report — February 2026",
+    post: {
+      kicker: "Hotel Espir Developer Report",
+      title: "February 2026",
+      intro:
+        "February was a month of foundations. The demo floor edged closer to completion, the next floor got its full design treatment, and the team brought a new face on board to push the character pipeline forward.",
+      sections: [
+        {
+          heading: "",
+          body: [
+            "Room 9, the final room of the demo floor, is the last piece standing between Lost Souls Interactive and a complete first-floor build. Once lore and note placement are finalised, it moves into Unity. The second floor layout is also drafted and sitting in Amasha's local build, held back from the shared repository until it is closer to locked. Features are being posted to the team's internal channel for upvoting before anything gets committed.",
+            "Dylan built an early map of Claireham, the Alabama town surrounding the hotel. The exercise proved immediately useful. Seeing the geography plotted out confirmed what had always been understood loosely: Hotel Espir sits apart from the town, set back in treeline near the Walker Plantation, separated from the streets and districts of Claireham proper. There is something in that isolation that the team had always intended, and now there is a map to prove it.",
+            "The bigger design news came from Amasha, who presented the full Level 3 layout. Without getting into specifics, the floor has a distinct character of its own. Where the demo teaches the player how to survive, Level 3 asks them to think laterally, moving through a floor full of interrupted lives and bad decisions made by people who checked in and never checked out. The puzzles emerge from the stories of the guests rather than sitting on top of them, and Damian's presence shapes how those stories get uncovered. The team came away from the presentation confident the floor has the right texture.",
+            "A detail worth noting: certain areas of the hotel are designed so that Damian cannot reach the player. Not everywhere, and never for long, but the occasional moment where he is on the other side of something and can only wait is intentional. Horror works better with breathing room.",
+            "On the art side, the baby crib is complete at high and low poly and ready for texturing. Bed linen tests came back promising during the meeting itself, needing a masking pass and a patterned fabric option. The baby rattle is built, clean silhouette, procedurally modelled, and marked as a hero object. Three concept designs for Victoria Palmer, one of the hotel's more morally flexible guests, went to a team vote. Design one won.",
+            "Sound implementation moved forward significantly. All in-game audio is now fully spatialised through Wwise, with more realistic distance falloff and occlusion filtering through walls. Rain has its own treatment, audible near windows and fading as the player moves away from the glass. Tom, who studied sound design formally and has a full recording setup, is mid-move and temporarily limited in what he can push to the project, but continues producing files regardless.",
+            "Damian's AI navigation was rebuilt to handle a specific problem: he is taller than a standard doorframe. Felix implemented a bending animation that triggers as he passes through doors. He ducks. It works, and it is quietly unsettling in a way that feels right. Jacob, meanwhile, built a custom Python autorigging tool for Maya after finding the standard solution overcomplicated for the team's specific needs. The Damian rig is complete.",
+            "Lost Souls Interactive also onboarded a new 3D character artist with fifteen years of professional experience across digital art and games. The immediate focus is the Damian character model, clearing the bottleneck that has been sitting upstream of the animation pipeline. The demo remains the priority. The goal for March is to have Level 3 in a playable blockout state. The hotel keeps taking shape.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "portrait",
+    src: `${base}/img/HEscreenshot5.png`,
+    tag: "Devlog",
+    title: "Developer Report — January 2026",
+    post: {
+      kicker: "Hotel Espir Developer Report",
+      title: "January 2026",
+      intro:
+        "Happy New Year! And welcome to 2026 when Hotel Espir welcomes you as a guest. Here's a run down from our first dev meeting of the year:",
+      sections: [
+        {
+          heading: "Wishlists",
+          body: [
+            "Lost Souls Interactive hit triple-digit wishlists in January. The press release went out through Games Press and landed coverage on Kotaku and Bloody Disgusting, which is one of the premier niche horror sites that others tend to follow. Marketing is working, but it needs material. The first-floor alpha demo hits internal testing January 22nd with a week buffer for polish before pushing it to streamers at month's end. Alpha means functionally complete and testable, not perfect. The goal is to prove the teaching space works before building the rest of the hotel around those rules.",
+            "The team spent January tightening systems and making a significant puzzle redesign that cuts the first floor from three keys down to one. The original structure was repetitive: find key, open door, find another key, open another door, find another key, escape. The new flow puts one key at the start, moves the trolley puzzle to the stairwell exit as the climactic challenge, and replaces the crowbar concept with a hammer-and-boards setup that sits earlier in the difficulty curve. The hammer breaks after final use, becoming useless weight you can throw or keep. This creates a proper difficulty arc instead of a linear spike: easy beginning, difficult middle with the trolley as peak tension, easier resolution at the end. Players reset expectations for the next floor instead of grinding through identical key-hunting loops.",
+          ],
+        },
+        {
+          heading: "Breath Mechanic",
+          body: [
+            `The breath mechanic lost its UI bar. Charles now relies on screen vignette and tunnel vision instead of staring at a meter while Damian is hunting him. The edges darken and blur as breath depletes, with a pulsing red zone for the timing window that shrinks with each use. This removes UI clutter and forces players to choose between vision advantage and staying silent. The journal system settled on note collection with smart categorization into "Important" and "Others" folders. Puzzle hints live in the note titles instead of requiring players to reread full environmental storytelling every time they need a code. Room 407's note gets titled "Room 407" instead of making players hunt through paragraphs. Keys now live in the journal as parcel tags attached to relevant pages. Used keys disappear but tags remain as progress markers.`,
+          ],
+        },
+        {
+          heading: "Sound",
+          body: [
+            "Wwise middleware is implemented and functional. Tom is porting the entire sound library into Wwise so Felix and Amasha can plug effects directly into the game without conversion delays. Some sounds may have been lost in the Mac-to-PC transition and will need rebuilding. Curtain models are being refined with period-accurate metal hooks, adjusted fold density, and fabric textures instead of patterned cloth because Substance Painter can't properly apply patterns to high-poly folds without Marvellous Designer. Damien's boot models are complete with placeholder textures. The full low-poly texture pass should finish by the 22nd.",
+          ],
+        },
+        {
+          heading: "Level Design",
+          body: [
+            "Level design discussions covered the full hotel structure. The current plan has the elevator crashing past the lobby straight into the basement after players think they're escaping. They climb back up to the lobby, complete that floor's puzzle, then descend into the basement properly for the finale. This gives the basement two appearances: one as disempowered panic where you're just trying to get out, one as purposeful confrontation where you're solving the problem. The lobby acts as a mandatory stop between basement visits to prevent players from accidentally completing the endgame early.",
+          ],
+        },
+        {
+          heading: "Damien",
+          body: [
+            "Character work continues on Damien's idle animations and the journal discovery sequence. Narrative arcs for Charles, Damien, and Dotty are complete and folded into the updated lore bible. Art Deco promotional posters are in progress with proper period styling that doubles as in-game environmental art. The team is planning a 20-30 second teaser trailer for end of February with voice-acted panic in a dark room, Damien breaking through, quick cuts of blood and environmental horror, release date text. Voice acting budget is negligible for trailer work because Fiverr rates for southern accent delivery run around £7 per 50 words. The intro sequence will have minimal NPC interaction to preserve Charles's isolation throughout the game proper.",
+          ],
+        },
+        {
+          heading: "Planning",
+          body: [
+            "Documentation and standardization are now development priorities. The one-on-one channel is live for focused discussions with optional observers. Team members are expected to document design decisions, use Craig for transcripts, and create paper trails for iteration. Character meshes are being standardized for animation efficiency. The team is ten months from ship with a functional first floor that needs final polish and testing before streamers see it.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "hallway",
+    src: `${base}/img/HEscreenshot3.png`,
+    tag: "Devlog",
+    title: "Devlog 03 — Sound, Size, and the Physics of Fear",
+    post: {
+      kicker: "Hotel Espir Developer Report 3",
+      title: "Devlog 03 — Sound, Size, and the Physics of Fear",
+      intro:
+        "This Lost Souls devlog covers three areas: why sound is now driving development, what it means to design a nine-foot monster, and how pushing a cart became more complicated than expected.",
+      sections: [
+        {
+          heading: "Sound moves to the front",
+          body: [
+            "The first-floor escape is mostly built. Rooms are placed, routes work, basic interactions function. That means the focus has shifted hard toward audio.",
+            "For the next two weeks, sound design is leading development priorities. Not because other work stopped, but because everything else needs to know what the audio system expects before it locks in.",
+            "That includes:",
+            [
+              "Getting Wwise middleware running so sound can respond dynamically to player actions and location.",
+              "Building out secondary audio: objects you interact with, ambient layers, environmental reactions.",
+              "Making sure throwable items, doors, and movement all feed the right information to the soundscape.",
+            ],
+            "In a game where listening matters as much as looking, audio can't be an afterthought. It has to shape how spaces feel, how tense moments build, and how readable danger becomes before it's on top of you.",
+          ],
+        },
+        {
+          heading: "Damian is massive, and that changes things",
+          body: [
+            "The character model is coming together, and one decision in particular is creating a ripple effect: Damian stands just over nine feet tall.",
+            "That's not a number chosen for shock value. It's there because scale matters in a horror game. When something that large moves through a hallway, it should feel wrong. Doors should feel too small. Corners should feel like bad cover.",
+            "But making him that big means rethinking how he interacts with the hotel:",
+            [
+              "He can't just grab a doorknob like a normal person. The animation now has him ducking slightly and reaching for the top of the frame, because anything else looks absurd.",
+              "His walk cycle needs weight. A creature that size doesn't move like a human sprinter.",
+              "Lighting and camera angles have to account for the fact that players will mostly see his torso and arms, not his face, until he's very close.",
+            ],
+            `The model itself is leaning into an unsettling, embalmed look: visible muscle structure, burn scarring, enough human anatomy left to read as a person, but distorted enough that it doesn't feel like one. Concept work is still exploring whether he should be shirtless or wear a heavy coat. Right now, the team is leaning toward exposed skin, because all that work on the damaged physique should be visible.`,
+          ],
+        },
+        {
+          heading: "Pushing a cart isn't simple",
+          body: [
+            "The trolley interaction went through its first real implementation this week, and it immediately surfaced questions no one expected.",
+            "The animation uses a curved movement path instead of a straight line, simulating the uneven weight and wobbly wheels of an old maintenance cart. That feels more physical, more grounded. But it also means the player's movement while pushing or pulling isn't purely forward and back, it shifts slightly side to side.",
+            "From a sound perspective, that's great: it creates natural variation in the noise, makes the action feel less robotic. From a gameplay perspective, it opens up new problems:",
+            [
+              "Should the cart make noise constantly, or only when it moves a certain distance?",
+              "If you nudge it just slightly, does that trigger a reaction, or is there a threshold?",
+              "What happens when the cart gets stuck on geometry? Does it scream at you with grinding metal sounds, or does it fail quietly?",
+            ],
+            "These aren't bugs. They're design questions about how forgiving or punishing the interaction should feel. The current thinking: one small nudge gives a warning. Keep pushing, and you've made a choice. Consequences follow.",
+          ],
+        },
+        {
+          heading: "Throwables and the problem of glass",
+          body: [
+            "Another conversation that came up this week: what happens when you throw something breakable?",
+            "If a player picks up a glass ashtray and hurls it at a wall, it should shatter. That's obvious. But once it shatters, what then?",
+            "Does broken glass stay on the floor? Can you pick up the shards? If you can, do those shards break again when thrown, or are they now indestructible fragments?",
+            "The line being drawn right now is simple: you get one throw. A glass object breaks into environmental debris, makes a loud sound, and that's the end of its usefulness. No shard-collecting, no recursive breaking. It's a compromise between physical believability and not turning the game into a physics sandbox.",
+            "The broader question, what should even be throwable, is still open. Certain objects will be critical for distractions or solving problems. Others are just set dressing. Figuring out which is which, and making that distinction clear to players without a glowing outline, is part of the work ahead.",
+          ],
+        },
+        {
+          heading: "Keys, doors, and how players know what to do",
+          body: [
+            "One lingering problem from the first-floor design: keys.",
+            "Right now, the plan involves a key ring in a maintenance closet. Players find it, realize certain keys are missing, and go looking for them. That works as a teaching moment, it establishes that locked doors are a thing and keys matter.",
+            "But it also raises complications:",
+            [
+              "If you're holding one key and find another, where does the first one go?",
+              "Should keys have names, or symbols, or room numbers?",
+              "If every floor uses the same key system, do you end up scrolling through ten identical-looking keys by the end of the game?",
+            ],
+            `The current thinking is to theme keys around concepts rather than numbers. Rooms aren't just numbered, they're named after traits or ideas tied to the hotel's story. A key to the "Civility Suite" is easier to remember than "Room 102," and it folds narrative into navigation.`,
+            "But that only works if players can tell keys apart at a glance, which means the UI and the in-world design both have to solve the same problem. Still figuring that one out.",
+          ],
+        },
+        {
+          heading: "Period details that no one will notice (but matter anyway)",
+          body: [
+            "A lot of work this week went into objects players might never consciously register: a 1920s-era fire alarm box, brass fixtures, door hardware that matches the time period.",
+            "None of this is essential to gameplay. But it's essential to atmosphere. When every object in a space looks like it belongs there, the world feels solid. When one thing is off, even subtly, it breaks immersion.",
+            "The same philosophy applies to promotional materials. Concept art for in-game posters is being designed in an art deco style that could actually hang in a hotel lobby in 1936. If it works as environmental storytelling, it can double as marketing material later.",
+          ],
+        },
+        {
+          heading: "Old radio, new law",
+          body: [
+            "Another small project in progress: repurposing old audio recordings as in-game radio content.",
+            "These are short, period-appropriate clips that were originally made as promotional material. Now they're being reworked into ambient broadcasts that play in certain areas of the hotel. Not cutscenes, not forced listening, just background noise that layers in hints about the world and the time period.",
+            "It's a way to do environmental storytelling without stopping the game or filling the journal with paragraphs of text. If you listen, you learn more. If you don't, you still get the vibe.",
+          ],
+        },
+        {
+          heading: "January 1st is still the line",
+          body: [
+            "The target date for the first-floor demo hasn't moved. Everything currently in progress, audio, animation, environmental polish, needs to be functional and tested by then.",
+            "That doesn't mean perfect. It means playable, readable, and good enough to show what the game is trying to do. The first floor is still the teaching space, the place where players learn how sound, light, and movement work in this hotel. Once that's solid, the rest of the building can be designed around those rules.",
+            "Next devlog will likely focus on systems: how light works, how noise detection works, and what the cost of making mistakes actually feels like in practice.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "bedroom",
+    src: `${base}/img/HEscreenshot2.webp`,
+    tag: "Devlog",
+    title: "Devlog 02 — Balance, Players, and the Flashlight Fight",
+    post: {
+      kicker: "Hotel Espir Developer Report 2",
+      title: "Devlog 02 — Balance, Players, and the Flashlight Fight",
+      intro:
+        "This Lost Souls devlog is about three things: how balance is handled, how the first floor teaches you the game, and why a simple flashlight turned into a full-blown design argument.",
+      sections: [
+        {
+          heading: "Fun first, balance second",
+          body: [
+            "Lost Souls isn't aiming for esports-grade balance. The philosophy is pretty simple: if a choice feels tense and interesting, it wins over perfect numbers.",
+            "Some routes and interactions will be a bit strong. That's acceptable. The important part is that the game feels consistent, readable and punishing in the right moments, instead of flat or random.",
+            "To get there, the plan leans heavily on people who actually put hours into the game. Regular testers, regular conversations, regular questions: where does it feel too easy, where does it feel cheap, where does it drag. Balance changes will come from that, not from a spreadsheet.",
+          ],
+        },
+        {
+          heading: "The first floor as a lesson",
+          body: [
+            `The current focus is still the first escape from the hotel. That slice has one job: teach you how the building "thinks" without turning into a glowing-arrow tutorial.`,
+            "Work on this front has been about:",
+            [
+              "Adjusting where bodies, props and doors sit so they feel like consequences of events, not random set dressing.",
+              "Using clutter, furniture and layout to guide movement, instead of invisible walls doing all the work.",
+              `Making important objects readable enough to notice under pressure, without shouting "puzzle solution".`,
+            ],
+            `If players pay attention, they should understand what the hotel expects of them, without the game ever saying "Objective: go here and press this".`,
+          ],
+        },
+        {
+          heading: "The journal belongs to Charles",
+          body: [
+            "The journal has been redefined. It now belongs to Charles, the player character, not Adam or anyone else.",
+            "That change does a few things at once:",
+            [
+              "It makes sense that he has it from the very start.",
+              "It gives a clean place to store codes, names and notes you pick up.",
+              `It avoids awkward "hidden stash" scenes that exist purely to force a key item into your hands.`,
+            ],
+            "Story about other characters will come from the environment, letters and audio, not from flipping open a book and reading the entire plot in one go.",
+          ],
+        },
+        {
+          heading: "Light should cost something",
+          body: [
+            "The biggest fight in this meeting was about the flashlight.",
+            "Right now, a normal torch with infinite use encourages exactly one behaviour: turn it on and never turn it off. In a horror game built around sound and tension, that kills a lot of atmosphere.",
+            "So the team started exploring alternatives: wind-up designs, battery limits, hybrid systems where you can extend your charge but also spend those batteries on other things. The details are still moving, but the design rule is fixed:",
+            "Using light should be a decision. Sometimes it should feel safer to stay in the dark than to fire up a bright, noisy tool.",
+            "Once the first-floor flow is solid, this is one of the next systems to lock in.",
+          ],
+        },
+        {
+          heading: "No quest log, more character",
+          body: [
+            "A classic task list is off the table for now. It doesn't fit the tone, and it isn't needed for the core premise: there is a killer in the hotel, and you want to leave.",
+            "Instead, guidance will come from:",
+            [
+              "Short lines from Charles to himself at the right moments.",
+              "Notes and signs that complain about problems around the building, which later double as hints.",
+              "The journal quietly tracking what you've learned and what seems important.",
+            ],
+            "The first floor is still the FTUE: the first-time user experience. Its job is to teach you how to read spaces, noise and objects in this hotel. Once that feels solid, the next devlogs can start talking about the things hunting you through it.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "devlog-01",
+    src: `${base}/img/HEscreenshot1.webp`,
+    tag: "Devlog",
+    title: "Devlog 01 — Building the Foundation",
+    post: {
+      kicker: "Hotel Espir Developer Report 1",
+      title: "Devlog 01 — Building the Foundation",
+      intro:
+        "Welcome to the first Lost Souls devlog. These updates will cover what we're working on each week, what's changing behind the scenes, and how the game is taking shape. No fluff, just progress.",
+      sections: [
+        {
+          heading: "The week's focus",
+          body: [
+            `The team spent this week tightening what we're calling the Primary pillar — the basic "escape the level" loop that holds the rest of the game together. It covers stealth, the main character Charles, and the key story thread that moves everything forward.`,
+            "The goal is to make sure that every core interaction works from start to finish: finding the key, using the flashlight, sorting the oil can and trolley puzzle, reading the note, and finally escaping through the right door. It's simple on paper, but it's the foundation for everything else.",
+            "Most of it already works. A few doors need to be fixed so they open the right way, and a couple of assets still need finishing, but the structure is solid.",
+          ],
+        },
+        {
+          heading: "Interface and usability",
+          body: [
+            "The main menu and settings screens got another round of design tests. The group decided to keep things simple — no flashy frames or decorative clutter. Instead, the ornate border will now animate only when you hover over a button, which keeps the same tone without overloading the screen.",
+            "We also locked in the placement for the breath bar HUD element (lower-left corner). Felix will handle those UI tweaks in Unity this week.",
+          ],
+        },
+        {
+          heading: "Sound and atmosphere",
+          body: [
+            "Tom's been rebuilding the master list of every sound the game will need so we can start recording and organising assets properly. He also re-recorded several ghost lines with a more restrained, whispered tone to fit the blind ghost concept.",
+            "We're experimenting with in-world audio lures — things like radio ads or music boxes — that can draw the monster's attention while masking the player's noise. It's a neat bit of sound design that ties directly into gameplay.",
+          ],
+        },
+        {
+          heading: "Art and models",
+          body: [
+            `Mikkel finished an Art Deco "cut chair" model that's being used in one of the key rooms. The red leather version looked better than the plain brown, so that's the new standard. A few scuffs and cracks will be added next to make it feel lived in.`,
+            "We also talked about the in-game portrait of Adam, one of the story's darker figures. We're keeping to a strict rule: no AI imagery and no direct likenesses of real historical people. Todor's going to use a real painting as a base, then rework it by hand so it fits the style without being someone recognisable.",
+            "As for Damien, the main antagonist, work is ongoing. The model should be in a showable state by mid-December once Will gets out from under admin tasks. After that, the rest of the NPCs can start taking shape. We'll probably use a clothing asset pack instead of building garments from scratch — faster, cheaper, and more practical than buying new software.",
+          ],
+        },
+        {
+          heading: "Code and coordination",
+          body: [
+            "From now on, weekly updates in meetings are capped at five minutes per person to keep things moving. GitHub repositories are being reorganised and synced properly after a small mix-up. Everything large, like audio and textures, will be handled with Git LFS so version control doesn't explode.",
+          ],
+        },
+        {
+          heading: "Marketing progress",
+          body: [
+            "The Halloween press release went out but got buried under the flood of seasonal horror drops — no surprise there. Still, social channels are slowly picking up: more views on TikTok and Instagram, a few new subscribers on YouTube. Comments have been positive, especially about the atmosphere.",
+            `Al's now running the marketing pipeline and wants the rest of us to feed him regular material — renders, clips, anything we're proud of. The idea is to share small slices of progress regularly rather than waiting until something's "finished."`,
+          ],
+        },
+        {
+          heading: "Looking ahead",
+          body: [
+            "The internal demo is still on track for January 1st. It won't be public yet, but it should be playable start to finish. The team's focus for the next stretch is to completely lock the Primary pillar — that's the core loop, all the way from the first flashlight flicker to the last door opening.",
+            "Expect more regular devlogs from here on out. The next one will cover the updated menus, sound tests, and maybe a first look at Damian if things go to plan.",
+          ],
+        },
+      ],
+    },
+  },
+];
 ---
 
-<Layout title="News | Hotel Espir">
+<Layout title="News | Hotel Espir" description="Devlog updates and announcements for Hotel Espir.">
+  <TorchBackground />
+
+  <div class="page-content">
   <main class="container">
-    <h1>News</h1>
+    <section class="section">
+      <h1>News</h1>
+      <p class="tagline">Devlog updates and announcements from Lost Souls Interactive.</p>
+    </section>
+
+    <section class="section">
+      <div class="bento">
+        {
+          screenshots.map(({ id, src, tag, title }, index) => (
+            <button
+              class={`bento-item ${index >= VISIBLE_COUNT ? "bento-item--hidden" : ""}`}
+              style={`--bg: url(${src})`}
+              data-full={src}
+              data-title={title}
+              data-post={`post-${id}`}
+              type="button"
+            >
+              <span class="bento-item__scrim" />
+              <span class="bento-item__tags">
+                {(Array.isArray(tag) ? tag : [tag]).map(t => (
+                  <span class="bento-item__tag">{t}</span>
+                ))}
+              </span>
+              <span class="bento-item__title">{title}</span>
+              <span class="bento-item__arrow" aria-hidden="true">
+                →
+              </span>
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        screenshots.length > VISIBLE_COUNT && (
+          <div class="bento-load-more">
+            <button id="bento-load-more" type="button">
+              Load More
+            </button>
+          </div>
+        )
+      }
+    </section>
   </main>
+
+  <GradientTransition from="#000" to="var(--color-background)" />
+  </div>
+
+  {
+    screenshots
+      .filter(s => s.post)
+      .map(({ id, post }) => (
+        <template id={`post-${id}`}>
+          <span class="postlight__kicker">{post!.kicker}</span>
+          <h2 class="postlight__title">{post!.title}</h2>
+          <p class="postlight__intro">{post!.intro}</p>
+          {post!.sections.map(section => (
+            <>
+              {section.heading && <h3>{section.heading}</h3>}
+              {section.body.map(block => {
+                if (Array.isArray(block)) {
+                  return (
+                    <ul>
+                      {block.map(item => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  );
+                }
+                if (typeof block === "object" && "cta" in block) {
+                  return (
+                    <a
+                      class="postlight__cta"
+                      href={block.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {block.cta}
+                    </a>
+                  );
+                }
+                if (typeof block === "object" && "tagline" in block) {
+                  return <p class="postlight__closing">{block.tagline}</p>;
+                }
+                return <p>{block}</p>;
+              })}
+            </>
+          ))}
+        </template>
+      ))
+  }
+
+  <div class="postlight" id="postlight" role="dialog" aria-modal="true" aria-label="Post" aria-hidden="true">
+    <div class="postlight__backdrop" id="postlight-backdrop"></div>
+    <div class="postlight__panel">
+      <div class="postlight__scroll" id="postlight-scroll">
+        <img class="postlight__banner" id="postlight-banner" src="" alt="" />
+        <div class="postlight__body" id="postlight-body"></div>
+      </div>
+    </div>
+
+    <button id="postlight-prev" class="postlight__nav postlight__nav--prev" type="button" aria-label="Previous">
+      ←
+    </button>
+    <button id="postlight-next" class="postlight__nav postlight__nav--next" type="button" aria-label="Next">
+      →
+    </button>
+
+    <button id="postlight-close" class="postlight__close" type="button" aria-label="Close">
+      ✕
+    </button>
+  </div>
 </Layout>
+
+<style>
+  /* Lifts all normal page content above the fixed TorchBackground behind
+     it — without this, positioned elements default above static content
+     in stacking order and the torch layer would cover everything. */
+  .page-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Overrides the global .section + .section divider (used on About/Press
+     for their stacked text blocks) — the bento grid doesn't need a hard
+     line separating it from the heading above it. */
+  .section + .section {
+    border-top: none;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    margin: 0 0 0.5rem;
+  }
+
+  .tagline {
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 9rem;
+    /* Lets the auto-placement algorithm backfill gaps instead of just
+       flowing forward — this is what makes the size pattern below tile
+       like puzzle pieces for any number of items, not just a fixed six. */
+    grid-auto-flow: dense;
+    gap: 1rem;
+    /* Breaks out of the page's narrower .container to sit at 75% of the
+       viewport width, centered independently of its parent's own width. */
+    width: 75vw;
+    max-width: 75vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* A repeating 6-tile size pattern (big, wide, small, small, wide, wide)
+     applied by position rather than a fixed per-item class, so it keeps
+     working — and keeps tiling cleanly — no matter how many posts exist.
+     Hidden (Load More) tiles are skipped entirely by grid placement, so
+     the pattern re-flows correctly once they're revealed. */
+  .bento-item:nth-child(6n + 1) {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .bento-item:nth-child(6n + 2),
+  .bento-item:nth-child(6n + 5),
+  .bento-item:nth-child(6n + 6) {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+
+  .bento-item:nth-child(6n + 3),
+  .bento-item:nth-child(6n + 4) {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .bento-item {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    cursor: pointer;
+    background-image: var(--bg);
+    background-size: cover;
+    background-position: center;
+    text-align: left;
+  }
+
+  .bento-item--hidden {
+    display: none;
+  }
+
+  .bento-load-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 2.5rem;
+  }
+
+  .bento-load-more button {
+    padding: 0.9rem 2.5rem;
+    background: transparent;
+    color: var(--color-foreground);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .bento-load-more button:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .bento-item__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(33, 19, 17, 0.85) 0%,
+      rgba(33, 19, 17, 0.15) 45%,
+      rgba(33, 19, 17, 0) 70%
+    );
+    transition: background 0.2s ease;
+  }
+
+  .bento-item:hover .bento-item__scrim {
+    background: linear-gradient(
+      to top,
+      rgba(33, 19, 17, 0.92) 0%,
+      rgba(33, 19, 17, 0.3) 55%,
+      rgba(33, 19, 17, 0) 75%
+    );
+  }
+
+  .bento-item__tags {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .bento-item__tag {
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 0.7rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .bento-item__title {
+    position: absolute;
+    left: 1rem;
+    right: 3.5rem;
+    bottom: 1rem;
+    color: var(--color-foreground);
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .bento-item:nth-child(6n + 1) .bento-item__title,
+  .bento-item:nth-child(6n + 2) .bento-item__title,
+  .bento-item:nth-child(6n + 5) .bento-item__title,
+  .bento-item:nth-child(6n + 6) .bento-item__title {
+    font-size: 1.25rem;
+  }
+
+  .bento-item__arrow {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-foreground);
+    border-radius: 999px;
+    color: var(--color-foreground);
+    font-size: 1rem;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .bento-item:hover .bento-item__arrow {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    transform: translate(2px, -2px);
+  }
+
+  .postlight {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+  }
+
+  .postlight.is-open {
+    display: block;
+  }
+
+  .postlight__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(33, 19, 17, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .postlight__panel {
+    position: relative;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  /* Fills 80-90% of the viewport on any device, rather than capping out
+     at a fixed max-width on large screens. */
+  .postlight__scroll {
+    width: 88vw;
+    height: 85vh;
+    overflow-y: auto;
+    border-radius: 0.75rem;
+    background: var(--color-background);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  }
+
+  .postlight__banner {
+    display: block;
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+  }
+
+  .postlight__body {
+    padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
+  }
+
+  .postlight__kicker {
+    display: block;
+    color: var(--color-muted-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .postlight__title {
+    font-size: clamp(1.75rem, 4vw, 2.25rem);
+    margin: 0 0 1.25rem;
+  }
+
+  .postlight__intro {
+    font-style: italic;
+    color: var(--color-muted-foreground);
+    margin: 0 0 1.75rem;
+  }
+
+  .postlight__body h3 {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-accent);
+    margin: 2rem 0 0.75rem;
+  }
+
+  .postlight__body p {
+    line-height: 1.7;
+    margin: 0 0 1rem;
+  }
+
+  .postlight__body ul {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .postlight__body li {
+    line-height: 1.7;
+    color: var(--color-foreground);
+  }
+
+  .postlight__body li::marker {
+    color: var(--color-accent);
+  }
+
+  .postlight__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 2rem;
+    margin: 0.5rem 0 1.5rem;
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 999px;
+    transition: transform 0.2s ease;
+  }
+
+  .postlight__cta:hover {
+    transform: translateY(-2px);
+  }
+
+  .postlight__closing {
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+    line-height: 1.5;
+    margin: 0 0 0.5rem;
+  }
+
+  /* Simple image-only tiles (no post yet) reuse this overlay with just the
+     banner shown full-height and no text body — toggled via .is-image-only
+     in the script below. Keeps the same 80-90vw/vh sizing as the post view
+     (via .postlight__scroll) rather than shrinking to the image's own size,
+     so it fills the screen consistently either way. */
+  .postlight.is-image-only .postlight__scroll {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .postlight.is-image-only .postlight__banner {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .postlight__close {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+    border: none;
+    border-radius: 999px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .postlight__close:hover {
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  .postlight__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(33, 19, 17, 0.6);
+    color: var(--color-foreground);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .postlight__nav--prev {
+    left: clamp(0.75rem, 3vw, 2rem);
+  }
+
+  .postlight__nav--next {
+    right: clamp(0.75rem, 3vw, 2rem);
+  }
+
+  .postlight__nav:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .postlight__nav--prev:hover {
+    transform: translateY(-50%) translateX(-2px);
+  }
+
+  .postlight__nav--next:hover {
+    transform: translateY(-50%) translateX(2px);
+  }
+
+  @media (max-width: 640px) {
+    .postlight__nav {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    /* Same nth-child size pattern as above (span 2 / span 1) still applies
+       here — dropping to 2 columns turns "span 2" into full-width and
+       "span 1" into half-width automatically, so the small tiles still
+       pair up two-by-two without redeclaring the whole pattern. */
+    .bento {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 10rem;
+    }
+  }
+</style>
+
+<script>
+  function initPostlight() {
+    const postlight = document.querySelector<HTMLElement>("#postlight");
+    const scroll = document.querySelector<HTMLElement>("#postlight-scroll");
+    const banner = document.querySelector<HTMLImageElement>("#postlight-banner");
+    const body = document.querySelector<HTMLElement>("#postlight-body");
+    const closeBtn = document.querySelector<HTMLButtonElement>("#postlight-close");
+    const prevBtn = document.querySelector<HTMLButtonElement>("#postlight-prev");
+    const nextBtn = document.querySelector<HTMLButtonElement>("#postlight-next");
+    const backdrop = document.querySelector<HTMLElement>("#postlight-backdrop");
+    const tiles = Array.from(document.querySelectorAll<HTMLButtonElement>(".bento-item"));
+    if (!postlight || !scroll || !banner || !body || !closeBtn || !backdrop || !prevBtn || !nextBtn) return;
+
+    let currentIndex = 0;
+
+    function openByIndex(index: number) {
+      // Wraps around at either end, so Prev/Next always work.
+      currentIndex = (index + tiles.length) % tiles.length;
+      const tile = tiles[currentIndex];
+
+      const src = tile.dataset.full ?? "";
+      const title = tile.dataset.title ?? "";
+      const templateId = tile.dataset.post;
+      const template = templateId
+        ? document.querySelector<HTMLTemplateElement>(`#${templateId}`)
+        : null;
+
+      banner!.src = src;
+      banner!.alt = title;
+      body!.replaceChildren();
+
+      if (template) {
+        body!.appendChild(template.content.cloneNode(true));
+        postlight!.classList.remove("is-image-only");
+      } else {
+        postlight!.classList.add("is-image-only");
+      }
+
+      postlight!.classList.add("is-open");
+      postlight!.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      scroll!.scrollTop = 0;
+    }
+
+    function close() {
+      postlight!.classList.remove("is-open");
+      postlight!.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      banner!.src = "";
+      body!.replaceChildren();
+    }
+
+    tiles.forEach((tile, index) => {
+      tile.addEventListener("click", () => {
+        openByIndex(index);
+        closeBtn!.focus();
+      });
+    });
+
+    prevBtn.addEventListener("click", () => openByIndex(currentIndex - 1));
+    nextBtn.addEventListener("click", () => openByIndex(currentIndex + 1));
+
+    closeBtn.addEventListener("click", close);
+    backdrop.addEventListener("click", close);
+    document.addEventListener("keydown", event => {
+      if (!postlight!.classList.contains("is-open")) return;
+      if (event.key === "Escape") close();
+      if (event.key === "ArrowLeft") openByIndex(currentIndex - 1);
+      if (event.key === "ArrowRight") openByIndex(currentIndex + 1);
+    });
+  }
+
+  initPostlight();
+  document.addEventListener("astro:after-swap", initPostlight);
+
+  function initLoadMore() {
+    const button = document.querySelector<HTMLButtonElement>("#bento-load-more");
+    if (!button) return;
+
+    button.addEventListener("click", () => {
+      document
+        .querySelectorAll<HTMLElement>(".bento-item--hidden")
+        .forEach(item => item.classList.remove("bento-item--hidden"));
+      button.closest<HTMLElement>(".bento-load-more")?.remove();
+    });
+  }
+
+  initLoadMore();
+  document.addEventListener("astro:after-swap", initLoadMore);
+</script>

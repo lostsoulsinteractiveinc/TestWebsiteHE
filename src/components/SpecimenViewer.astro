@@ -8,37 +8,43 @@ const specimens = [
     label: "Book",
     icon: `${base}/img/iconography/books.png`,
     model: `${base}/models/BookStand.glb`,
+    credit: "Mikkel",
   },
   {
     label: "Ashtray",
     icon: `${base}/img/iconography/ashtray.png`,
     model: `${base}/models/Ashtray.glb`,
+    credit: "Mikkel",
   },
   {
     label: "Lighter",
     icon: `${base}/img/iconography/lighter.png`,
     model: `${base}/models/Lighter.glb`,
+    credit: "Mikkel",
   },
   {
     label: "Rattle",
     icon: `${base}/img/iconography/rattle.png`,
     model: `${base}/models/BabyRattle.glb`,
+    credit: "Mikkel",
   },
   {
     label: "Screwdriver",
     icon: `${base}/img/iconography/screwdriver.png`,
     model: `${base}/models/ScrewDriver.glb`,
+    credit: "Mikkel",
   },
 ];
 ---
 
 <div class="icon-rail" id="icon-rail">
   {
-    specimens.map(({ label, icon, model }) => (
+    specimens.map(({ label, icon, model, credit }) => (
       <button
         class="icon-rail__btn"
         data-model={model}
         data-label={label}
+        data-credit={credit}
         aria-label={`View ${label} in 3D`}
         type="button"
       >
@@ -66,6 +72,7 @@ const specimens = [
     shadow-intensity="1"
     exposure="1"
   />
+  <p id="specimen-credit" class="specimen-modal__credit"></p>
   <button
     id="specimen-close"
     class="specimen-modal__close"
@@ -177,6 +184,17 @@ const specimens = [
   .specimen-modal__close:hover {
     transform: translateX(-50%) translateY(-2px);
   }
+
+  .specimen-modal__credit {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    margin: 0;
+    color: var(--color-foreground);
+    opacity: 0.6;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+  }
 </style>
 
 <script>
@@ -189,12 +207,14 @@ const specimens = [
     );
     const closeBtn = document.querySelector<HTMLButtonElement>("#specimen-close");
     const backdrop = document.querySelector<HTMLElement>("#specimen-backdrop");
+    const credit = document.querySelector<HTMLElement>("#specimen-credit");
     const buttons = document.querySelectorAll<HTMLButtonElement>(".icon-rail__btn");
-    if (!modal || !viewer || !closeBtn || !backdrop) return;
+    if (!modal || !viewer || !closeBtn || !backdrop || !credit) return;
 
-    function openModal(model: string, label: string) {
+    function openModal(model: string, label: string, creditName: string) {
       viewer!.setAttribute("src", model);
       viewer!.setAttribute("alt", label);
+      credit!.textContent = creditName ? `© Made by ${creditName}` : "";
       modal!.classList.add("is-open");
       modal!.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
@@ -206,13 +226,15 @@ const specimens = [
       modal!.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       viewer!.removeAttribute("src");
+      credit!.textContent = "";
     }
 
     buttons.forEach(btn => {
       btn.addEventListener("click", () => {
         const model = btn.dataset.model;
         const label = btn.dataset.label ?? "";
-        if (model) openModal(model, label);
+        const creditName = btn.dataset.credit ?? "";
+        if (model) openModal(model, label, creditName);
       });
     });
 

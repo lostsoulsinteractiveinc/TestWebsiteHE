@@ -1,6 +1,8 @@
 ---
 import logoMark from "@/assets/img/logo-wordmark.png";
+import logoCompany from "@/assets/img/logo-company.png";
 import SocialIcons from "./SocialIcons.astro";
+import { navLinks } from "@/data/navLinks";
 
 const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
 const homeHref = `${base}/`;
@@ -13,14 +15,10 @@ const upArrow = `${base}/img/upArrow.svg`;
 
   <div class="site-footer__inner container">
     <div class="site-footer__top">
-      <a href={homeHref} class="site-footer__logo" aria-label="Hotel Espir home">
-        <img
-          src={logoMark.src}
-          width={logoMark.width}
-          height={logoMark.height}
-          alt=""
-        />
-      </a>
+      <div class="site-footer__follow">
+        <span class="site-footer__follow-label">Follow us</span>
+        <SocialIcons size="1.5rem" />
+      </div>
 
       <button
         id="scroll-top"
@@ -32,9 +30,38 @@ const upArrow = `${base}/img/upArrow.svg`;
       </button>
     </div>
 
-    <div class="site-footer__follow">
-      <span class="site-footer__follow-label">Follow us</span>
-      <SocialIcons size="1.5rem" />
+    <div class="site-footer__columns">
+      <div class="site-footer__columns-left">
+        <div class="site-footer__col site-footer__col--logo">
+          <a href={homeHref} aria-label="Hotel Espir home">
+            <img
+              src={logoMark.src}
+              width={logoMark.width}
+              height={logoMark.height}
+              alt=""
+            />
+          </a>
+        </div>
+
+        <div class="site-footer__divider" aria-hidden="true"></div>
+
+        <nav class="site-footer__col site-footer__col--links">
+          {
+            navLinks.map(({ label, path }) => (
+              <a href={`${base}${path}`}>{label}</a>
+            ))
+          }
+        </nav>
+      </div>
+
+      <div class="site-footer__col site-footer__col--company">
+        <span
+          class="site-footer__company-logo"
+          style={`--logo: url(${logoCompany.src})`}
+          role="img"
+          aria-label="Lost Souls Interactive"
+        ></span>
+      </div>
     </div>
 
     <p class="site-footer__copyright">
@@ -55,33 +82,122 @@ const upArrow = `${base}/img/upArrow.svg`;
   .site-footer__scrim {
     position: absolute;
     inset: 0;
+    /* Starts fully opaque and matching --color-background exactly, so the
+       flat color coming out of the gradient section above it continues
+       seamlessly, then eases into the translucent scrim that lets the
+       footer image show through further down. */
     background: linear-gradient(
       to bottom,
-      rgba(33, 19, 17, 0.75) 0%,
+      var(--color-background) 0%,
+      rgba(33, 19, 17, 0.85) 12%,
       rgba(33, 19, 17, 0.9) 100%
     );
   }
 
   .site-footer__inner {
     position: relative;
-    padding-block: clamp(2rem, 5vw, 3.5rem);
+    padding-block: clamp(2rem, 2vw, 3.5rem);
     display: flex;
     flex-direction: column;
-    align-items: center;
     gap: 2rem;
   }
 
   .site-footer__top {
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1.5rem;
   }
 
-  .site-footer__logo img {
-    height: 7rem;
+  .site-footer__follow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .site-footer__follow-label {
+    color: var(--color-foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .site-footer__columns {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  .site-footer__columns-left {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: clamp(1rem, 3vw, 2rem);
+    min-width: 0;
+  }
+
+  .site-footer__divider {
+    width: 1px;
+    background: var(--color-border);
+  }
+
+  .site-footer__col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .site-footer__col--logo {
+    justify-content: center;
+  }
+
+  .site-footer__col--logo img {
+    height: clamp(2.75rem, 9vw, 6rem);
     width: auto;
     display: block;
+  }
+
+  .site-footer__col--links {
+    justify-content: center;
+  }
+
+  .site-footer__col--links a {
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+
+  .site-footer__col--links a:hover {
+    color: var(--color-accent);
+  }
+
+  .site-footer__col--company {
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .site-footer__company-logo {
+    display: block;
+    width: clamp(3.25rem, 11vw, 7.5rem);
+    height: clamp(3.25rem, 11vw, 7.5rem);
+    background-color: var(--color-foreground);
+    /* Source art is solid black on a transparent background — recolored
+       via mask instead of shown directly, same trick as SocialIcons,
+       or it'd be invisible against this dark footer. */
+    mask-image: var(--logo);
+    -webkit-mask-image: var(--logo);
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
   }
 
   .site-footer__top-btn {
@@ -105,25 +221,10 @@ const upArrow = `${base}/img/upArrow.svg`;
     transform: translateY(-2px);
   }
 
-  .site-footer__follow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .site-footer__follow-label {
-    color: var(--color-foreground);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-
   .site-footer__copyright {
     margin: 0;
     color: var(--color-muted-foreground);
-    font-size: 0.875rem;
+    font-size: 1rem;
     text-align: center;
   }
 </style>

@@ -1,0 +1,31 @@
+---
+// A thin filler section that fades from one flat color to another, for
+// smoothing a hard seam between two sections with mismatched edge colors
+// (e.g. the hero's warm near-black scrim meeting a background image that's
+// true black at its edge).
+type Props = {
+  from?: string;
+  to?: string;
+  height?: string;
+};
+
+const {
+  from = "var(--color-background)",
+  to = "#000",
+  height = "clamp(4rem, 10vw, 8rem)",
+} = Astro.props;
+---
+
+<div
+  class="gradient-transition"
+  style={`--from: ${from}; --to: ${to}; --height: ${height}`}
+>
+</div>
+
+<style>
+  .gradient-transition {
+    width: 100%;
+    height: var(--height);
+    background: linear-gradient(to bottom, var(--from), var(--to));
+  }
+</style>

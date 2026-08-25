@@ -1,6 +1,7 @@
 ---
 import logoMark from "@/assets/img/logo-mark.png";
 import SocialIcons from "./SocialIcons.astro";
+import { navLinks } from "@/data/navLinks";
 
 // Route paths match each file's location under src/pages/ (e.g.
 // src/pages/press.astro → /press), not the src/pages/ path itself.
@@ -8,12 +9,6 @@ import SocialIcons from "./SocialIcons.astro";
 // the /TestWebsiteHE/ subpath — a hardcoded "/news" would 404 there.
 const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
 const homeHref = `${base}/`;
-
-const navLinks = [
-  { label: "News", href: `${base}/news` },
-  { label: "Press Kit", href: `${base}/press` },
-  { label: "About", href: `${base}/about` },
-];
 
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 ---
@@ -43,13 +38,16 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
     <ul id="nav-links" class="site-nav__links">
       {
-        navLinks.map(({ label, href }) => (
-          <li>
-            <a href={href} aria-current={currentPath === href ? "page" : undefined}>
-              {label}
-            </a>
-          </li>
-        ))
+        navLinks.map(({ label, path }) => {
+          const href = `${base}${path}`;
+          return (
+            <li>
+              <a href={href} aria-current={currentPath === href ? "page" : undefined}>
+                {label}
+              </a>
+            </li>
+          );
+        })
       }
 
       <li class="site-nav__divider" aria-hidden="true">|</li>
@@ -67,6 +65,13 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     top: 0;
     z-index: 50;
     background: transparent;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Applied once scrolled 50% through the hero — see the script below.
+     On pages with no hero, this never gets added and nav stays transparent. */
+  .site-nav.is-scrolled {
+    background-color: var(--color-background);
   }
 
   .site-nav__bar {
@@ -214,4 +219,26 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
   initNavToggle();
   document.addEventListener("astro:after-swap", initNavToggle);
+
+  function initNavScrollBg() {
+    const nav = document.querySelector<HTMLElement>(".site-nav");
+    const hero = document.querySelector<HTMLElement>(".hero");
+    if (!nav) return;
+
+    // No hero on this page (About/News/Press) — nothing for the nav to
+    // overlap, so just leave it as-is rather than reacting to scroll.
+    if (!hero) return;
+
+    function updateNavBg() {
+      const threshold = hero!.offsetHeight * 0.5;
+      nav!.classList.toggle("is-scrolled", window.scrollY > threshold);
+    }
+
+    updateNavBg();
+    window.addEventListener("scroll", updateNavBg, { passive: true });
+    window.addEventListener("resize", updateNavBg);
+  }
+
+  initNavScrollBg();
+  document.addEventListener("astro:after-swap", initNavScrollBg);
 </script>

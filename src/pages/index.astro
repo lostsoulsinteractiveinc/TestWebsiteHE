@@ -2,9 +2,16 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/Hero.astro";
 import TorchReveal from "@/components/TorchReveal.astro";
+import GradientTransition from "@/components/GradientTransition.astro";
 ---
 
 <Layout>
   <Hero />
+  <GradientTransition
+    from="var(--color-background)"
+    to="#000"
+    height="clamp(8rem, 18vw, 16rem)"
+  />
   <TorchReveal />
+  <GradientTransition from="#000" to="var(--color-background)" />
 </Layout>

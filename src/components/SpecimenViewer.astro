@@ -73,7 +73,6 @@ const specimens = [
     exposure="1"
     camera-orbit="0deg 75deg 105%"
     min-camera-orbit="auto auto 60%"
-    environment-image={`${base}/hdri/witsand_woolshop_1k.hdr`}
   />
   <p id="specimen-credit" class="specimen-modal__credit"></p>
   <button
@@ -157,7 +156,11 @@ const specimens = [
     /* Applied here rather than on .specimen-modal__backdrop — that div
        sits behind the <model-viewer> WebGL canvas, and browsers can fail
        to blend backdrop-filter through a transparent canvas stacked on
-       top of it. Blurring at this outer level doesn't depend on that. */
+       top of it. Blurring at this outer level doesn't depend on that.
+       This only works reliably without a custom environment-image on the
+       model-viewer — adding one breaks Chromium's compositing here with
+       no CSS-level fix, so don't reintroduce environment-image on this
+       element without re-checking this. */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
@@ -178,6 +181,11 @@ const specimens = [
     width: 100%;
     height: 100%;
     --poster-color: transparent;
+    /* Soft warm-light look without a real HDRI (environment-image breaks
+       backdrop-filter on this modal — see .specimen-modal). A plain CSS
+       filter on the canvas itself doesn't touch compositing, so it's safe
+       here. */
+    filter: sepia(0.25) saturate(1.3) hue-rotate(-6deg) brightness(1);
   }
 
   .specimen-modal__close {

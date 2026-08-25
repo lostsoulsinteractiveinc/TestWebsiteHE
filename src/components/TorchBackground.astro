@@ -5,9 +5,15 @@
 // page is or how far you've scrolled. Mouse position is tracked relative to
 // the viewport directly (no bounding-rect math needed) since this element
 // always covers exactly the viewport.
+type Props = {
+  light?: string;
+  dark?: string;
+};
+
 const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
-const lightSrc = `${base}/img/background.jpg`;
-const darkSrc = `${base}/img/backgrounddark.png`;
+const { light = "img/background.jpg", dark = "img/backgrounddark.png" } = Astro.props;
+const lightSrc = `${base}/${light}`;
+const darkSrc = `${base}/${dark}`;
 ---
 
 <div class="torch-bg" id="torch-bg">

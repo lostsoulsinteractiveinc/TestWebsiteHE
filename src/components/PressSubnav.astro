@@ -1,0 +1,98 @@
+---
+const sections = [
+  { id: "factsheet", label: "Factsheet" },
+  { id: "overview", label: "Overview" },
+  { id: "key-features", label: "Key Features" },
+  { id: "quick-facts", label: "Quick Facts" },
+  { id: "visuals", label: "Visuals" },
+  { id: "contact", label: "Contact" },
+];
+---
+
+<nav class="press-subnav" id="press-subnav">
+  <div class="press-subnav__inner">
+    {
+      sections.map(({ id, label }) => (
+        <a href={`#${id}`} class="press-subnav__tab">
+          {label}
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<style>
+  /* Sits right below the download button in normal flow, hidden until
+     50% through .press-hero (see script below), then sticks with a gap
+     under the main site nav once scrolling would otherwise carry it out
+     of view — same "appear, then pin" pattern as the icon rail elsewhere.
+     No background/border of its own: it floats over the page, and each
+     tab already has its own pill background, so a solid bar behind them
+     would just make this read as fused onto the main nav above it. */
+  .press-subnav {
+    position: sticky;
+    top: calc(var(--nav-height) + 1rem);
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .press-subnav.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .press-subnav__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .press-subnav__tab {
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    background: var(--color-muted);
+    color: var(--color-foreground);
+    text-decoration: none;
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .press-subnav__tab:hover {
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+</style>
+
+<script>
+  function initPressSubnav() {
+    const subnav = document.querySelector<HTMLElement>("#press-subnav");
+    const hero = document.querySelector<HTMLElement>(".press-hero");
+    if (!subnav || !hero) return;
+
+    function absoluteTop(el: HTMLElement) {
+      return el.getBoundingClientRect().top + window.scrollY;
+    }
+
+    function update() {
+      const threshold = absoluteTop(hero!) + hero!.offsetHeight * 0.5;
+      subnav!.classList.toggle("is-visible", window.scrollY > threshold);
+    }
+
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+  }
+
+  initPressSubnav();
+  document.addEventListener("astro:after-swap", initPressSubnav);
+</script>

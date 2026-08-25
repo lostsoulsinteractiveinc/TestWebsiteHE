@@ -53,7 +53,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
       <li class="site-nav__divider" aria-hidden="true">|</li>
 
       <li class="site-nav__social-item">
-        <SocialIcons size="1.25rem" />
+        <SocialIcons size="1.25rem" limit={5} />
       </li>
     </ul>
   </div>

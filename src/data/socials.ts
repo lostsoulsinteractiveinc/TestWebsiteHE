@@ -20,4 +20,19 @@ export const socials = [
     href: "https://hotelespir.com/discord",
     icon: "discord.svg",
   },
+  {
+    label: "Twitch",
+    href: "https://twitch.tv/hotelespir",
+    icon: "twitch.svg",
+  },
+  {
+    label: "Facebook",
+    href: "https://facebook.com/hotelespir",
+    icon: "facebook.svg",
+  },
+  {
+    label: "Linktree",
+    href: "https://linktr.ee/hotelespir",
+    icon: "linktree.svg",
+  },
 ];

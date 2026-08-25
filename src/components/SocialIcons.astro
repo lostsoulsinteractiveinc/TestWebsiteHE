@@ -4,16 +4,18 @@ import { socials } from "@/data/socials";
 type Props = {
   size?: string;
   class?: string;
+  limit?: number;
 };
 
-const { size = "1.25rem", class: className } = Astro.props;
+const { size = "1.25rem", class: className, limit } = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+const visibleSocials = limit ? socials.slice(0, limit) : socials;
 ---
 
 <div class:list={["social-icons", className]} style={`--icon-size: ${size}`}>
   {
-    socials.map(({ label, href, icon }) => (
+    visibleSocials.map(({ label, href, icon }) => (
       <a href={href} aria-label={label} title={label} target="_blank" rel="noopener noreferrer">
         <span
           class="social-icons__icon"

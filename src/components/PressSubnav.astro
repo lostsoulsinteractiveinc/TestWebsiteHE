@@ -22,17 +22,26 @@ const sections = [
 </nav>
 
 <style>
-  /* Sits right below the download button in normal flow, hidden until
-     50% through .press-hero (see script below), then sticks with a gap
-     under the main site nav once scrolling would otherwise carry it out
-     of view — same "appear, then pin" pattern as the icon rail elsewhere.
-     No background/border of its own: it floats over the page, and each
-     tab already has its own pill background, so a solid bar behind them
-     would just make this read as fused onto the main nav above it. */
+  /* Sits right below the main nav in normal flow, hidden until 50%
+     through .press-hero (see script below), then sticks flush under it
+     once scrolling would otherwise carry it out of view — same
+     "appear, then pin" pattern as the icon rail elsewhere. Its own
+     background is a fade from the nav's solid color down to transparent,
+     so it reads as one continuous piece with the nav rather than a
+     second floating bar — the pills sit inside that fade rather than
+     needing a hard-edged bar of their own. */
   .press-subnav {
     position: sticky;
-    top: calc(var(--nav-height) + 1rem);
+    top: var(--nav-height);
     z-index: 30;
+    padding-top: 1rem;
+    padding-bottom: 2.5rem;
+    background: linear-gradient(
+      to bottom,
+      var(--color-background) 0%,
+      var(--color-background) 40%,
+      transparent 100%
+    );
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
@@ -70,6 +79,14 @@ const sections = [
   .press-subnav__tab:hover {
     background: var(--color-accent);
     color: var(--color-accent-foreground);
+  }
+
+  /* Scrolling a short page on a phone is easy enough without a jump-nav,
+     and the pill row doesn't have room to breathe at that width anyway. */
+  @media (max-width: 640px) {
+    .press-subnav {
+      display: none;
+    }
   }
 </style>
 

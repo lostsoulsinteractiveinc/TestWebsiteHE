@@ -126,6 +126,19 @@ const specimens = [
     transform: translateX(-4px);
   }
 
+  @media (max-width: 640px) {
+    .icon-rail {
+      right: 0.5rem;
+      gap: 0.6rem;
+    }
+
+    .icon-rail__btn {
+      width: 2.75rem;
+      height: 2.75rem;
+      padding: 0.5rem;
+    }
+  }
+
   .icon-rail__btn img {
     width: 100%;
     height: 100%;
@@ -258,8 +271,15 @@ const specimens = [
     }
 
     function update() {
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
       const showAt = absoluteTop(hero!) + hero!.offsetHeight * 0.5;
-      const hideAt = absoluteTop(footer!) + footer!.offsetHeight * 0.5;
+      // On phones the rail sits fixed at viewport-center, which is right
+      // where the footer's scroll-to-top button ends up — the 50%-through
+      // desktop threshold leaves the rail up too long and it hides that
+      // button. Clear out a full viewport-height early on phones instead.
+      const hideAt = isMobile
+        ? absoluteTop(footer!) - window.innerHeight
+        : absoluteTop(footer!) + footer!.offsetHeight * 0.5;
       const visible = window.scrollY > showAt && window.scrollY < hideAt;
       rail!.classList.toggle("is-visible", visible);
     }

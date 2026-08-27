@@ -55,7 +55,10 @@ const clipB = `${base}/vid/ClipB.mp4`;
   .hero {
     position: relative;
     width: 100%;
-    height: min(85vh, 56rem);
+    /* Full viewport height (not a shorter cap like 85vh) so nothing from
+       the section below ever peeks into view before the user scrolls —
+       a shorter hero left a sliver of the next section visible on load. */
+    height: 100svh;
     min-height: 26rem;
     overflow: hidden;
     background: var(--color-background);
@@ -83,12 +86,16 @@ const clipB = `${base}/vid/ClipB.mp4`;
   .hero-scrim {
     position: absolute;
     inset: 0;
+    /* Fades to true black (not --color-background) by the bottom edge —
+       that's what TorchReveal's dark image starts at, so the hero now
+       meets it seamlessly on its own, no separate GradientTransition
+       band needed between the two sections. */
     background: linear-gradient(
       to bottom,
       rgba(33, 19, 17, 0.15) 0%,
       rgba(33, 19, 17, 0.35) 55%,
-      rgba(33, 19, 17, 0.45) 75%,
-      rgba(33, 19, 17, 1) 100%
+      rgba(33, 19, 17, 0.55) 75%,
+      rgba(0, 0, 0, 1) 100%
     );
   }
 

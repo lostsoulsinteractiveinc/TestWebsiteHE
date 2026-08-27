@@ -34,8 +34,8 @@ const sections = [
     position: sticky;
     top: var(--nav-height);
     z-index: 30;
-    padding-top: 1rem;
-    padding-bottom: 2.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
     background: linear-gradient(
       to bottom,
       var(--color-background) 0%,
@@ -94,14 +94,20 @@ const sections = [
   function initPressSubnav() {
     const subnav = document.querySelector<HTMLElement>("#press-subnav");
     const hero = document.querySelector<HTMLElement>(".press-hero");
-    if (!subnav || !hero) return;
+    const nav = document.querySelector<HTMLElement>(".site-nav");
+    if (!subnav || !hero || !nav) return;
 
     function absoluteTop(el: HTMLElement) {
       return el.getBoundingClientRect().top + window.scrollY;
     }
 
     function update() {
-      const threshold = absoluteTop(hero!) + hero!.offsetHeight * 0.5;
+      // Fires exactly when the subnav is about to reach its own sticky
+      // position (flush under the nav), not at some fraction of the hero's
+      // height — otherwise, on a tall hero, the fade-in happens well
+      // before the subnav has scrolled up into place, so it briefly
+      // appears floating mid-page instead of already pinned at the top.
+      const threshold = absoluteTop(hero!) + hero!.offsetHeight - nav!.offsetHeight;
       subnav!.classList.toggle("is-visible", window.scrollY > threshold);
     }
 

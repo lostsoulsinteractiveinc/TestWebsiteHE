@@ -1,22 +1,50 @@
+---
+const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
+
+// TODO: swap "#" for the real playtest signup link once it exists.
+const links = [
+  {
+    title: "Playtest Registration",
+    description: "Sign up for the closed beta and early demo access",
+    href: "#",
+  },
+  {
+    title: "Story & Lore",
+    description: "Read what came before the doors closed",
+    href: `${base}/news`,
+  },
+  {
+    title: "Join Discord",
+    description: "Speak with the others who've stayed",
+    href: "https://hotelespir.com/discord",
+  },
+  {
+    title: "Steam Page",
+    description: "Add to your wishlist and get launch updates",
+    href: "https://store.steampowered.com/app/4216950/Hotel_Espir/",
+  },
+];
+---
+
 <section class="welcome">
   <h1 class="reveal">Welcome to Hotel Espir</h1>
 
   <p class="reveal">
-    Nestled amid the quiet pines of the Claireham countryside, Hotel Espir
-    has offered weary travelers a place of rest and enjoyment since the turn
-    of the century. Established in 1900s on the grounds of the old Walker Plantation, our hotel is proud to carry forward our local heritage. Visitors often comment on the stillness of the air, the vintage charm of the rooms, and the way the moonlight never quite reaches the far end of the courtyard.
+    Since the turn of the Century, Hotel Espir has welcomed travelers from
+    all walks of life to roost in our quiet nest. Established on old farm
+    land, deep in the woods northwest of Claireham proper, Hotel Espir is
+    the crown jewel of the humble, hard working town.
   </p>
 
   <p class="reveal">
-    Our staff take great pride in hospitality. Many guests tell us they
-    slept better here than anywhere else — deeply, dreamlessly, some for
-    longer than they intended.
+    We promise the deepest sleep one could ask for, and our guests tell us
+    they slept better here than anywhere else. This may be because the
+    hotel tends to, as the night settles in, breathe with you.
   </p>
 
   <p class="reveal">
-    You may notice, as evening settles in, that the hotel seems to breathe
-    along with you.
-    Locals say the land remembers what happened here. We have seen the flicker of lanterns in the fields after midnight. We have heard the footsteps pacing the old servant quarters long since they were buried beneath the parking lot. But do not let the stories frighten you. Here at Hotel Espir, every guest is part of our history.
+    Folks from Claireham say, "The land remembers." We say, "Every guest is
+    part of our history."
   </p>
 
   <p class="welcome__ominous reveal">Not every guest checks out.</p>
@@ -25,6 +53,45 @@
     Hotel Espir. Est. 1846. <span aria-hidden="true">|</span> We do hope you
     enjoy your stay.
   </p>
+
+  <div class="ready">
+    <h2 class="reveal">Are You Ready For Hotel Espir?</h2>
+
+    <p class="reveal">Hotel Espir awaits your arrival.</p>
+    <p class="reveal">
+      Charles may not be ready to confront its history, or his own, to make
+      it through the night. But he must, you must, do everything possible
+      to survive.
+    </p>
+
+    <p class="ready__label reveal">Choose your fate:</p>
+
+    <div class="ready__grid">
+      {
+        links.map(({ title, description, href }) => {
+          const isExternal = href.startsWith("http");
+          return (
+            <a
+              class="ready__card reveal"
+              href={href}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+            >
+              <span class="ready__card-title">{title}</span>
+              <span class="ready__card-desc">{description}</span>
+              <span class="ready__card-arrow" aria-hidden="true">
+                →
+              </span>
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <p class="ready__tagline reveal">
+      Some check out. Some never leave | Hotel Espir – Coming Halloween 2027
+    </p>
+  </div>
 </section>
 
 <style>
@@ -69,5 +136,104 @@
   .welcome__signature span {
     margin-inline: 0.5rem;
     opacity: 0.5;
+  }
+
+  /* "Are You Ready" block — now lives inside .welcome instead of its own
+     top-level section, so it inherits .welcome's width/centering rather
+     than setting its own (nesting two independent 75vw breakouts would
+     size correctly but center wrong, since the inner one's margin-left:
+     50% would resolve against .welcome's already-narrowed width instead
+     of the viewport). A top border stands in for the divider a section
+     boundary would normally have gotten. */
+  .ready {
+    margin-top: clamp(3rem, 8vw, 5rem);
+    padding-top: clamp(3rem, 8vw, 5rem);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .ready h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin: 0 0 1.5rem;
+  }
+
+  .ready p {
+    line-height: 1.75;
+    margin: 0 0 1.25rem;
+  }
+
+  .ready__label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-top: 2rem;
+  }
+
+  .ready__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0 3rem;
+  }
+
+  .ready__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    padding-right: 3rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    color: var(--color-foreground);
+    /* Self-contained transition list (rather than relying on the global
+       .reveal rule) since this element carries both classes — .reveal's
+       scroll-in animates transform/opacity too, and a component-scoped
+       rule here would otherwise win by specificity and silently drop
+       the opacity transition. */
+    transition:
+      border-color 0.2s ease,
+      transform 0.3s ease,
+      opacity 0.7s ease;
+  }
+
+  .ready__card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+
+  .ready__card-title {
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .ready__card-desc {
+    color: var(--color-muted-foreground);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .ready__card-arrow {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.25rem;
+    color: var(--color-foreground);
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .ready__card:hover .ready__card-arrow {
+    color: var(--color-accent);
+    transform: translate(2px, -2px);
+  }
+
+  .ready__tagline {
+    font-family: "Donau Neue", system-ui, -apple-system, sans-serif;
+    font-style: italic;
+    color: var(--color-muted-foreground);
+    margin: 0 0 0.5rem;
   }
 </style>

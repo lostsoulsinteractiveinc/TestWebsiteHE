@@ -54,40 +54,42 @@ const visuals = [
     <main class="press-main">
       <div class="container">
         <section class="section" id="factsheet">
-          <h2>Factsheet</h2>
+          <h2 class="reveal">Factsheet</h2>
           <div class="factsheet-grid">
-            <div>
+            <div class="reveal">
               <h3>Developer</h3>
               <p>Lost Souls Interactive (LSI)</p>
               <p class="muted">Nine developers, working remotely from around the world</p>
             </div>
 
-            <div>
+            <div class="reveal">
               <h3>Publisher</h3>
               <p>Lost Souls Interactive (LSI)</p>
             </div>
 
-            <div>
+            <div class="reveal">
               <h3>Platform</h3>
-              <span class="factsheet-pill">Steam · Windows</span>
+              <a class="factsheet-pill" href="https://store.steampowered.com/app/4216950/Hotel_Espir/" target="_blank" rel="noopener noreferrer">
+                Steam · Windows
+              </a>
             </div>
 
-            <div>
+            <div class="reveal">
               <h3>Release Status</h3>
               <p>Pre-release</p>
             </div>
 
-            <div>
+            <div class="reveal">
               <h3>Release Date</h3>
               <p>Steam – Halloween 2027</p>
             </div>
 
-            <div class="factsheet-grid__full">
+            <div class="factsheet-grid__full reveal">
               <h3>Genres</h3>
               <p>Horror, Psychological Horror, Stealth, Story Rich, Action</p>
             </div>
 
-            <div class="factsheet-grid__full">
+            <div class="factsheet-grid__full reveal">
               <h3>Social Media</h3>
               <div class="factsheet-socials">
                 {
@@ -207,9 +209,19 @@ const visuals = [
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
     gap: 1.5rem;
-    padding-block: clamp(6rem, 16vw, 10rem);
+    /* Viewport height minus the nav's own height — nav is `position:
+       sticky`, not fixed/overlapping, so it consumes its own space above
+       this rather than floating over it. Sizing against the full 100svh
+       here would push this box 1 nav-height past the actual visible
+       area, which both let factsheet peek in early and skewed the
+       centered content visually low (centered against a box taller than
+       what's actually on screen). */
+    min-height: calc(100svh - var(--nav-height));
+    padding-block: clamp(4rem, 10vw, 6rem);
+    box-sizing: border-box;
   }
 
   .press-hero__kicker {
@@ -221,7 +233,7 @@ const visuals = [
   }
 
   .press-hero__title {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: clamp(3.5rem, 12vw, 7.5rem);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin: 0;
@@ -246,6 +258,12 @@ const visuals = [
 
   .press-hero__download:hover {
     transform: translateY(-2px);
+  }
+
+  /* Tighter than the global .section padding-block — the subnav above
+     already adds its own buffer before this. */
+  #factsheet {
+    padding-top: 1rem;
   }
 
   h2 {
@@ -360,13 +378,19 @@ const visuals = [
   }
 
   .factsheet-pill {
+    text-decoration: none;
     display: inline-block;
     padding: 0.4rem 1rem;
     border-radius: 999px;
-    background: var(--color-muted);
+    background: transparent;
+    border: 1px solid var(--color-border);
     color: var(--color-foreground);
     font-size: 0.875rem;
     font-weight: 600;
+  }
+  .factsheet-pill:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   .factsheet-socials {
@@ -381,19 +405,20 @@ const visuals = [
     gap: 0.5rem;
     padding: 0.5rem 1.1rem;
     border-radius: 999px;
-    background: var(--color-muted);
+    border: 1px solid var(--color-border);
+    background: transparent;
     color: var(--color-foreground);
     font-size: 0.875rem;
     font-weight: 600;
     text-decoration: none;
     transition:
-      background-color 0.2s ease,
+      border-color 0.2s ease,
       color 0.2s ease;
   }
 
   .factsheet-social:hover {
-    background: var(--color-accent);
-    color: var(--color-accent-foreground);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   .factsheet-social__icon {

@@ -5,20 +5,13 @@ import TorchReveal from "@/components/TorchReveal.astro";
 import GradientTransition from "@/components/GradientTransition.astro";
 import SpecimenViewer from "@/components/SpecimenViewer.astro";
 import Welcome from "@/components/Welcome.astro";
-import ReadyCta from "@/components/ReadyCta.astro";
 ---
 
 <Layout>
   <Hero />
   <SpecimenViewer />
-  <GradientTransition
-    from="var(--color-background)"
-    to="#000"
-    height="clamp(8rem, 18vw, 16rem)"
-  />
   <TorchReveal>
     <Welcome />
   </TorchReveal>
   <GradientTransition from="#000" to="var(--color-background)" />
-  <ReadyCta />
 </Layout>

@@ -2,9 +2,14 @@
 const base = import.meta.env.BASE_URL.replace(/\/+$/, "");
 const lightSrc = `${base}/img/background.jpg`;
 const darkSrc = `${base}/img/backgrounddark.png`;
+const cursorSrc = `${base}/img/iconography/TORCHLIGHT-cursor.png`;
 ---
 
-<section class="torch" id="torch-reveal">
+<section
+  class="torch"
+  id="torch-reveal"
+  style={`--torch-cursor: url("${cursorSrc}")`}
+>
   <img class="torch__layer torch__layer--dark" src={darkSrc} alt="" />
   <img class="torch__layer torch__layer--light" src={lightSrc} alt="" />
   <div class="torch__content">
@@ -34,6 +39,10 @@ const darkSrc = `${base}/img/backgrounddark.png`;
     --torch-x: 50%;
     --torch-y: 50%;
     --torch-radius: 0px;
+    /* 64px copy of the torch icon (browsers ignore cursor images over
+       128px). Hotspot 44 44 sits on the lens, so the beam appears to
+       shine out of the torch head. */
+    cursor: var(--torch-cursor) 44 44, crosshair;
   }
 
   .torch__layer {
